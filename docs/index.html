@@ -3317,7 +3317,9 @@ function restartSituation() {
   s.index = 0;
   s.score = 0;
   s.completed = false;
-
+  
+  saveProgress();
+  
   document.getElementById("situationComplete").style.display = "none";
   document.getElementById("quiz").style.display = "block";
 
@@ -3379,4 +3381,5 @@ function nextQuestion() {
 
 </body>
 </html>
+
 
