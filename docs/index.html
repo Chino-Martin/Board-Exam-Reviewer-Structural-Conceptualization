@@ -26,11 +26,18 @@ img { max-width:100%; margin-top:10px; }
 </div>
 
 <!-- SITUATION MENU -->
-<div class="container" id="situationMenu" style="display:none;">
-  <h2>Select Situation</h2>
+<div class="container" id="situationMenu">
+
+  <!-- Back to Hub -->
+  <button onclick="goBackToHub()" style="background:#555;color:#fff;">
+    ⬅ Back to Hub
+  </button>
+
+  <h2>Structural Conceptualization</h2>
   <div id="situationList"></div>
   <button onclick="showFinalSummary()">Finish Review</button>
 </div>
+
 
 <!-- FINAL SUMMARY -->
 <div class="container" id="summary" style="display:none;">
@@ -3376,10 +3383,14 @@ function nextQuestion() {
     showSituationComplete();
   }
 }
+function goBackToHub() {
+  window.location.href = "../index.html";
+}
 
 </script>
 
 </body>
 </html>
+
 
 
