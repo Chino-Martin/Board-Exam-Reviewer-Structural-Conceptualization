@@ -1,0 +1,47 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  margin: 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: white;
+  min-height: 100vh;
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+.choice {
+  border: 1px solid #ccc;
+  padding: 12px;
+  margin: 8px 0;
+  cursor: pointer;
+}
+
+.choice.correct {
+  background: #c8f7c5;
+}
+
+.choice.wrong {
+  background: #f7c5c5;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #222;
+  color: white;
+  border: none;
+}
+
+footer {
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.4;
+}

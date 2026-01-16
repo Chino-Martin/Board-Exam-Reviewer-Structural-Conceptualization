@@ -1,0 +1,3322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Structural Conceptualization Quiz Reviewer</title>
+
+<style>
+body { font-family: Arial, sans-serif; background:#f4f6f8; padding:20px; }
+.container { max-width:760px; margin:auto; background:#fff; padding:20px; border-radius:8px; }
+button { width:100%; padding:12px; margin:8px 0; font-size:16px; cursor:pointer; }
+.correct { background:#4CAF50; color:#fff; }
+.wrong { background:#F44336; color:#fff; }
+.watermark { text-align:center; font-size:10px; color:#aaa; margin-top:30px; }
+img { max-width:100%; margin-top:10px; }
+</style>
+</head>
+
+<body>
+
+<!-- START -->
+<div class="container" id="start">
+  <h2>Structural Conceptualization Quiz Reviewer</h2>
+  <input id="username" placeholder="Enter your name" style="width:100%;padding:10px;">
+  <button onclick="startQuiz()">Start Quiz</button>
+</div>
+
+<!-- SITUATION MENU -->
+<div class="container" id="situationMenu" style="display:none;">
+  <h2>Select Situation</h2>
+  <div id="situationList"></div>
+  <button onclick="showFinalSummary()">Finish Review</button>
+</div>
+
+<!-- FINAL SUMMARY -->
+<div class="container" id="summary" style="display:none;">
+  <h2>Final Summary</h2>
+  <div id="summaryList"></div>
+  <hr>
+  <p id="totalScore"></p>
+  <button onclick="location.reload()">Restart Review</button>
+</div>
+
+<!-- QUIZ -->
+<div class="container" id="quiz" style="display:none;">
+  <h3 id="situation"></h3>
+  <p id="question"></p>
+  <img id="figure" style="display:none;">
+  <div id="choices"></div>
+  <button id="nextBtn" style="display:none;" onclick="nextQuestion()">Next</button>
+  <p id="progress"></p>
+</div>
+
+<div class="watermark">tikbalang reviewer</div>
+
+<script>
+/* ========= QUESTIONS (UNCHANGED) ========= */
+const questions = [
+  {
+
+  situation: "Situation 10 – Structural Systems (Figures)",
+  question: "Which figure uses diagonal structural technology?",
+  choices: ["Figure E", "Figure D", "Figure C", "Figure B"],
+  correct: "Figure C",
+  image: "figure10-A.png"
+},
+{
+  situation: "Situation 10 – Structural Systems (Figures)",
+  question: "Which figure uses glass curtain wall technology?",
+  choices: ["Figure A", "Figure E", "Figure C", "Figure D"],
+  correct: "Figure E",
+  image: "figure10-A.png"
+},
+{
+  situation: "Situation 10 – Structural Systems (Figures)",
+  question: "Which figure is a steel frame and sandwich panel system?",
+  choices: ["Figure A", "Figure B", "Figure C", "Figure D"],
+  correct: "Figure A",
+  image: "figure10-A.png"
+},
+{
+  situation: "Situation 10 – Structural Systems (Figures)",
+  question: "Which technology originated during the International Style period?",
+  choices: ["Figure A", "Figure B", "Figure C", "Figure D"],
+  correct: "Figure D",
+  image: "figure10-A.png"
+},
+{
+  situation: "Situation 10 – Structural Systems (Figures)",
+  question: "Which technology is most suitable for large building spaces?",
+  choices: ["Figure A", "Figure B", "Figure C", "Figure D"],
+  correct: "Figure B",
+  image: "figure10-A.png"
+},
+
+/* --- Structural Behavior and Concepts --- */
+
+{
+  situation: "Situation 10 – Structural Behavior and Concepts",
+  question: "What is the elastic movement of a loaded part of a structure?",
+  choices: ["Strain", "Deflection", "Stress", "Settlement"],
+  correct: "Deflection"
+},
+{
+  situation: "Situation 10 – Structural Behavior and Concepts",
+  question: "What is the movement on a structure caused by extreme lateral motion acting in directions other than parallel to the direction of resistance?",
+  choices: ["Orthostatic effect", "P-delta effect", "Centroidal effect", "Torsional effect"],
+  correct: "Torsional effect"
+},
+{
+  situation: "Situation 10 – Structural Behavior and Concepts",
+  question: "What is the ratio of longitudinal stress to strain within the elastic limit called?",
+  choices: [
+    "Modulus of elasticity",
+    "Shear modulus of elasticity",
+    "Bulk modulus of elasticity",
+    "Longitudinal coefficient of elasticity"
+  ],
+  correct: "Modulus of elasticity"
+},
+{
+  situation: "Situation 10 – Structural Behavior and Concepts",
+  question: "What is the horizontal displacement of one level of a structure relative to the level above or below it?",
+  choices: ["Drift", "Storey shear", "Storey drift", "Shear deformation"],
+  correct: "Storey drift"
+},
+{
+  situation: "Situation 10 – Structural Behavior and Concepts",
+  question: "What is the minimum distance required to prevent contact between separated structures during deflection caused by seismic activity or wind forces?",
+  choices: ["Drift index", "Drift limit", "Storey drift", "Building separation"],
+  correct: "Building separation"
+},
+
+/* --- Structural Systems --- */
+
+{
+  situation: "Situation 10 – Structural Systems",
+  question: "A structural system with an essentially complete space frame that supports gravity loads, while resistance to lateral loads is provided by shear walls or braced frames:",
+  choices: [
+    "Bearing wall system",
+    "Building frame system",
+    "Hybrid system",
+    "Moment resisting frame"
+  ],
+  correct: "Building frame system"
+},
+{
+  situation: "Situation 10 – Structural Systems",
+  question: "A rigid frame connected to its supports with fixed joints. It offers greater resistance to deflection than other frame types but also more sensitive to support settlement and thermal expansion or contraction:",
+  choices: ["Rigid frame", "Hinged frame", "Fixed frame", "Portal frame"],
+  correct: "Fixed frame"
+},
+{
+  situation: "Situation 10 – Structural Systems",
+  question: "A rigid frame consisting of two columns and a beam forming a single bay, also known as a single-bay frame:",
+  choices: ["Rigid frame", "Bent", "Portal frame", "Truss"],
+  correct: "Portal frame"
+},
+{
+  situation: "Situation 10 – Structural Systems",
+  question: "A structural system that lacks a complete vertical load-carrying space frame:",
+  choices: [
+    "Bearing wall system",
+    "Building frame system",
+    "Gravity wall system",
+    "Combined system"
+  ],
+  correct: "Bearing wall system"
+},
+{
+  situation: "Situation 10 – Structural Systems",
+  question: "A three-dimensional structural system without bearing walls, composed of interconnected members designed to function as a complete, self-contained unit, with or without horizontal diaphragms or bracing systems:",
+  choices: ["Brace frame", "Space frame", "Trussed system", "A-frame"],
+  correct: "Space frame"
+},
+  /* --- Loads and Actions --- */
+
+{
+  situation: "Situation 10 – Loads and Actions",
+  question: "The live load on a structure resulting from the weight of people, furniture, stored materials, and other similar items within a building:",
+  choices: ["Live load", "Occupancy load", "Dead load", "Static load"],
+  correct: "Occupancy load"
+},
+{
+  situation: "Situation 10 – Loads and Actions",
+  question: "The total design lateral force or shear acting at the base of a structure:",
+  choices: ["Base shear", "Gravity force", "Cantilever effect", "P-delta force"],
+  correct: "Base shear"
+},
+{
+  situation: "Situation 10 – Loads and Actions",
+  question: "Structural facilities for emergency operations following an earthquake:",
+  choices: ["Hazard facilities", "Essential facilities", "Non-occupant facilities", "Critical facilities"],
+  correct: "Essential facilities"
+},
+{
+  situation: "Situation 10 – Loads and Actions",
+  question: "The condition where the natural period of a structure coincides with the dominant frequency of ground motion:",
+  choices: ["Structural vibration effect", "Resonance", "Frequency equivalence", "Harmonic resonance"],
+  correct: "Resonance"
+},
+{
+  situation: "Situation 10 – Loads and Actions",
+  question: "Structural failure through buckling or plastic deformation that renders a structural assembly unfit for service:",
+  choices: ["Structural failure", "Structural fatigue", "Structural rupture", "Structural damage"],
+  correct: "Structural damage"
+},
+
+/* --- Stress, Strain, and Materials --- */
+
+{
+  situation: "Situation 10 – Stress, Strain, and Materials",
+  question: "The upper flexible portion of a structure that includes a vertical connection of structural systems:",
+  choices: ["Tower", "Base", "Frame", "Platform"],
+  correct: "Tower"
+},
+{
+  situation: "Situation 10 – Stress, Strain, and Materials",
+  question: "According to standard sign conventions for moments:",
+  choices: [
+    "A positive moment is counterclockwise, and a negative moment is clockwise",
+    "A positive moment is clockwise, and a negative moment is counterclockwise"
+  ],
+  correct: "A positive moment is counterclockwise, and a negative moment is clockwise"
+},
+{
+  situation: "Situation 10 – Stress, Strain, and Materials",
+  question: "An instrument to measure deformation:",
+  choices: ["Strain gauge", "Deformation measuring equipment", "Stress meter", "Extensometer"],
+  correct: "Extensometer"
+},
+{
+  situation: "Situation 10 – Stress, Strain, and Materials",
+  question: "An instrument to measure the velocity and acceleration of an earthquake:",
+  choices: ["Seismograph", "Geometer", "Accelerograph", "Inclinometer"],
+  correct: "Accelerograph"
+},
+{
+  situation: "Situation 10 – Stress, Strain, and Materials",
+  question: "The resistance of a material to deformation under applied stress is referred to as:",
+  choices: ["Hardness", "Toughness", "Ductility", "Brittleness"],
+  correct: "Ductility"
+},
+
+/* --- Loads on Structures --- */
+
+{
+  situation: "Situation 10 – Loads on Structures",
+  question: "A transformer vault is considered a:",
+  choices: ["Live load", "Dead load", "Uniformly distributed load", "Concentrated load"],
+  correct: "Concentrated load"
+},
+{
+  situation: "Situation 10 – Loads on Structures",
+  question: "Furniture is considered a:",
+  choices: ["Dead load", "Concentrated load", "Uniformly distributed load", "Live load"],
+  correct: "Live load"
+},
+{
+  situation: "Situation 10 – Loads on Structures",
+  question: "What is the intensity of force applied per unit area?",
+  choices: ["Strain", "Stress", "Fatigue", "Creep"],
+  correct: "Stress"
+},
+{
+  situation: "Situation 10 – Loads on Structures",
+  question: "What is the deformation of a body resulting from an applied force?",
+  choices: ["Stress", "Strain", "Force", "Density"],
+  correct: "Strain"
+},
+{
+  situation: "Situation 10 – Loads on Structures",
+  question: "A force that tends to produce tension in an elastic body is called:",
+  choices: ["Tensile force", "Axial force", "Shear force", "Torsional force"],
+  correct: "Tensile force"
+},
+/* --- Strength of Materials --- */
+
+{
+  situation: "Situation 10 – Strength of Materials",
+  question: "The maximum tensile, compressive, or shearing stress a material can withstand without rupturing or fracturing is called:",
+  choices: ["Yield point", "Elastic limit", "Ultimate strength", "Elasticity"],
+  correct: "Ultimate strength"
+},
+{
+  situation: "Situation 10 – Strength of Materials",
+  question: "The maximum stress beyond which a material does not return to its original length, resulting in permanent deformation, is called:",
+  choices: ["Plastic limit", "Plastic expansion", "Elastic limit", "Strain"],
+  correct: "Elastic limit"
+},
+{
+  situation: "Situation 10 – Strength of Materials",
+  question: "What is another term for the elastic limit?",
+  choices: ["Deformation", "Elongation", "Buckling", "Cracking"],
+  correct: "Elongation"
+},
+{
+  situation: "Situation 10 – Strength of Materials",
+  question: "What is the tendency of a slender structural member to bend or collapse under compressive stress?",
+  choices: ["Cracking", "Shearing", "Buckling", "Yielding"],
+  correct: "Buckling"
+},
+{
+  situation: "Situation 10 – Strength of Materials",
+  question: "Which property of a material defines its resistance to indentation or scratching?",
+  choices: ["Toughness", "Elasticity", "Hardness", "Ductility"],
+  correct: "Hardness"
+},
+
+/* --- Structural Analysis and Systems --- */
+
+{
+  situation: "Situation 10 – Structural Analysis and Systems",
+  question: "A space frame designed to carry all vertical gravity loads is called a:",
+  choices: [
+    "Bearing wall system",
+    "Bracing system",
+    "Vertical load-carrying space frame",
+    "Moment-resisting space system"
+  ],
+  correct: "Vertical load-carrying space frame"
+},
+{
+  situation: "Situation 10 – Structural Analysis and Systems",
+  question: "An element or system whose deformation under lateral load is significantly larger than that of adjoining parts of the structure is referred to as a:",
+  choices: ["Boundary element", "Platform", "Horizontal bracing system", "Flexible element"],
+  correct: "Flexible element"
+},
+{
+  situation: "Situation 10 – Structural Analysis and Systems",
+  question: "What is the design analysis method used as a basis for the structural design of buildings, in which total lateral forces are distributed among vertical elements in proportion to their rigidities?",
+  choices: [
+    "Shear and moment diagram",
+    "Distribution of horizontal shear",
+    "Stability against overturning",
+    "Horizontal torsional moments"
+  ],
+  correct: "Distribution of horizontal shear"
+},
+{
+  situation: "Situation 10 – Structural Analysis and Systems",
+  question: "An assemblage of framing members designed to support gravity loads and resist lateral forces is called a:",
+  choices: ["Frame", "Grid", "Structure", "System"],
+  correct: "Frame"
+},
+{
+  situation: "Situation 10 – Structural Analysis and Systems",
+  question: "A space frame in which members and joints resist forces primarily through flexure is called a:",
+  choices: [
+    "Bearing wall system",
+    "Bracing system",
+    "Vertical load-carrying space frame",
+    "Moment-resisting space system"
+  ],
+  correct: "Moment-resisting space system"
+},
+
+/* --- Standards and Materials --- */
+
+{
+  situation: "Situation 10 – Standards and Materials",
+  question: "What is the ASTM standard for deformed steel welded wire fabric?",
+  choices: ["ASTM A496", "ASTM A706", "ASTM A497", "ASTM A615"],
+  correct: "ASTM A497"
+},
+{
+  situation: "Situation 10 – Standards and Materials",
+  question: "Which ASTM standard applies to deformed and plain carbon-steel bars for concrete reinforcement?",
+  choices: ["ASTM A615", "ASTM C33", "ASTM A706", "ASTM C94"],
+  correct: "ASTM A615"
+},
+{
+  situation: "Situation 10 – Standards and Materials",
+  question: "Which ASTM specification covers the standard for ready-mixed concrete?",
+  choices: ["ASTM A36", "ASTM C94", "ASTM C150", "ASTM C143"],
+  correct: "ASTM C94"
+},
+{
+  situation: "Situation 10 – Standards and Materials",
+  question: "Which ASTM specification is used for structural concrete design and construction?",
+  choices: ["ASTM A992", "ASTM C150", "ASTM C33", "ASTM 318"],
+  correct: "ASTM 318"
+},
+{
+  situation: "Situation 10 – Standards and Materials",
+  question: "Which ASTM standard covers stainless steel bars and shapes used in structural applications?",
+  choices: ["ASTM A276", "ASTM A615", "ASTM A36", "ASTM A307"],
+  correct: "ASTM A276"
+},
+/* --- Live and Dead Loads --- */
+
+{
+  situation: "Situation 10 – Live and Dead Loads",
+  question: "What is the live load of cotton storage (in kg/m²)?",
+  choices: ["1200", "1800", "1500", "1000"],
+  correct: "1500"
+},
+{
+  situation: "Situation 10 – Live and Dead Loads",
+  question: "What is the live load of hardware and tools (in kg/m²)?",
+  choices: ["1500", "2000", "1800", "2200"],
+  correct: "2000"
+},
+{
+  situation: "Situation 10 – Live and Dead Loads",
+  question: "What is the live load of a toilet area (in kg/m²)?",
+  choices: ["250", "600", "480", "360"],
+  correct: "360"
+},
+{
+  situation: "Situation 10 – Live and Dead Loads",
+  question: "What is the design load of ceramic tiles (in kN/m³)?",
+  choices: ["22.6", "23.6", "20.7", "21.2"],
+  correct: "23.6"
+},
+{
+  situation: "Situation 10 – Live and Dead Loads",
+  question: "What is the design load of copper (in kN/m³)?",
+  choices: ["77.3", "78.5", "87.3", "88.6"],
+  correct: "78.5"
+},
+
+/* --- Structural Strength Concepts --- */
+
+{
+  situation: "Situation 10 – Structural Strength Concepts",
+  question: "What do you call the point at which a material is about to rupture?",
+  choices: ["Ultimate strength", "Point of breaking", "Point of no return", "NOTA"],
+  correct: "Ultimate strength"
+},
+{
+  situation: "Situation 10 – Structural Strength Concepts",
+  question: "What is the result of nominal strength multiplied by the strength reduction factor?",
+  choices: [
+    "Required strength",
+    "Calculated strength",
+    "Design strength",
+    "Reduced strength"
+  ],
+  correct: "Design strength"
+},
+{
+  situation: "Situation 10 – Structural Strength Concepts",
+  question: "Which unit of force in the SI system is approximately equal to 0.225 pounds?",
+  choices: ["Kilonewton", "Newton", "Megapascal", "Kilopascal"],
+  correct: "Newton"
+},
+{
+  situation: "Situation 10 – Structural Strength Concepts",
+  question: "What type of stress remains in a material due to the manufacturing process?",
+  choices: ["Buckling stress", "Residual stress", "Resilience", "Salinity"],
+  correct: "Residual stress"
+},
+{
+  situation: "Situation 10 – Structural Strength Concepts",
+  question: "What do you call the stress at which a material starts to deform permanently?",
+  choices: [
+    "Yield strength",
+    "Ultimate strength",
+    "Elastic limit",
+    "Breaking point"
+  ],
+  correct: "Yield strength"
+},
+/* =========================
+   SITUATION 11 – SOILS AND FOUNDATIONS, LOADS
+   ========================= */
+
+/* --- Footings and Foundations (General) --- */
+
+{
+  situation: "Situation 11 – Footings and Foundations (General)",
+  question: "What type of continuous footing supports an entire heavy structure and helps reduce settlement on weak soil?",
+  choices: ["Strip footing", "Continuous footing", "Mat footing", "Pad footing"],
+  correct: "Mat footing"
+},
+{
+  situation: "Situation 11 – Footings and Foundations (General)",
+  question: "Which type of footing is often used on sloping sites where the foundation follows the slope with minimal excavation?",
+  choices: ["Stepped footing", "Strip footing", "Raft footing", "Sloping footing"],
+  correct: "Stepped footing"
+},
+{
+  situation: "Situation 11 – Footings and Foundations (General)",
+  question: "What is a continuous strip of concrete that supports a wall carrying a uniformly distributed load?",
+  choices: ["Beam footing", "Raft footing", "Cellular footing", "Strip footing"],
+  correct: "Strip footing"
+},
+{
+  situation: "Situation 11 – Footings and Foundations (General)",
+  question: "What type of footing is used when the ground bearing capacity is low and heavy columns are placed close together?",
+  choices: ["Isolated footing", "Mat footing", "Strip footing", "Pad footing"],
+  correct: "Mat footing"
+},
+{
+  situation: "Situation 11 – Footings and Foundations (General)",
+  question: "Which footing is designed to support two parallel columns?",
+  choices: ["Combined footing", "Frame footing", "Strap footing", "Cellular footing"],
+  correct: "Combined footing"
+},
+
+/* --- Soil Investigation --- */
+
+{
+  situation: "Situation 11 – Soil Investigation",
+  question: "Soil boring tests must reach a minimum depth of:",
+  choices: ["1.5 meters", "1.8 meters", "2 meters", "3 meters"],
+  correct: "2 meters"
+},
+{
+  situation: "Situation 11 – Soil Investigation",
+  question: "Which of the following does NOT determine the required number of boreholes?",
+  choices: [
+    "Size of the lot",
+    "Height of the building",
+    "Presence of geological conditions",
+    "Local building code"
+  ],
+  correct: "Height of the building"
+},
+{
+  situation: "Situation 11 – Soil Investigation",
+  question: "When is soil testing typically conducted?",
+  choices: [
+    "During site investigation",
+    "Before excavation",
+    "After excavation",
+    "Also considered as a beam"
+  ],
+  correct: "During site investigation"
+},
+{
+  situation: "Situation 11 – Soil Investigation",
+  question: "Where should soil test holes be located?",
+  choices: [
+    "Anywhere within the site",
+    "Under the columns",
+    "Outside the building footprint",
+    "None of the above"
+  ],
+  correct: "Under the columns"
+},
+{
+  situation: "Situation 11 – Soil Investigation",
+  question: "Who is responsible for conducting the soil bearing capacity test?",
+  choices: [
+    "Geodetic engineer",
+    "Geotechnical engineer",
+    "Structural engineer",
+    "Architect"
+  ],
+  correct: "Geotechnical engineer"
+},
+
+/* --- Earthworks and Pressures --- */
+
+{
+  situation: "Situation 11 – Earthworks and Pressures",
+  question: "What is the standard test used to determine soil bearing capacity?",
+  choices: [
+    "SPT (Standard Penetration Test)",
+    "Slump test",
+    "Schmidt hammer test",
+    "Compression test"
+  ],
+  correct: "SPT (Standard Penetration Test)"
+},
+{
+  situation: "Situation 11 – Earthworks and Pressures",
+  question: "What is the act of excavating or filling earth or similar material in preparation for a finished surface, such as paving?",
+  choices: ["Cut and fill", "Grading", "Site preparation", "Benching"],
+  correct: "Grading"
+},
+{
+  situation: "Situation 11 – Earthworks and Pressures",
+  question: "What is the pressure caused by the force exerted by retained earth?",
+  choices: [
+    "Soil bearing pressure",
+    "Surcharge pressure",
+    "Earth pressure",
+    "Hydrostatic pressure"
+  ],
+  correct: "Earth pressure"
+},
+{
+  situation: "Situation 11 – Earthworks and Pressures",
+  question: "What is the standard thickness of an earthfill layer before compaction is performed?",
+  choices: ["100 mm", "150 mm", "200 mm", "250 mm"],
+  correct: "200 mm"
+},
+{
+  situation: "Situation 11 – Earthworks and Pressures",
+  question: "What is the depth below the groundwater level multiplied by the unit weight of water?",
+  choices: [
+    "Soil bearing pressure",
+    "Hydrostatic pressure",
+    "Groundwater pressure",
+    "None of the above"
+  ],
+  correct: "Hydrostatic pressure"
+},
+/* --- Foundation Bearing Conditions --- */
+
+{
+  situation: "Situation 11 – Foundation Bearing Conditions",
+  question: "Foundations should NOT rest on:",
+  choices: ["Driven pile", "Natural grade", "Bored pile", "Earth fill"],
+  correct: "Earth fill"
+},
+{
+  situation: "Situation 11 – Foundation Bearing Conditions",
+  question: "Your client asks you to erect a commercial building on land that was formerly a rice field. On what type of soil should the foundation rest?",
+  choices: ["Soft", "Medium", "Hard", "Very hard"],
+  correct: "Hard"
+},
+{
+  situation: "Situation 11 – Foundation Bearing Conditions",
+  question: "A structural member that functions to transfer building loads safely into the ground is called a:",
+  choices: ["Column", "Footing", "Beam", "None of the above"],
+  correct: "Footing"
+},
+{
+  situation: "Situation 11 – Foundation Bearing Conditions",
+  question: "What do you call the underlying structure that forms the foundation of a building or other structure?",
+  choices: ["Base", "Substructure", "Superstructure", "None of the above"],
+  correct: "Substructure"
+},
+{
+  situation: "Situation 11 – Foundation Bearing Conditions",
+  question: "The isolated footing of residential houses usually rests on:",
+  choices: ["Gravel bed", "50 mm mass concrete", "Soil", "None of the above"],
+  correct: "50 mm mass concrete"
+},
+
+/* --- Soil Characteristics and Piles --- */
+
+{
+  situation: "Situation 11 – Soil Characteristics and Piles",
+  question: "On a grassy plain, the foundation should rest on soil that is:",
+  choices: ["Hard to very hard", "Very soft to soft", "Medium to hard", "None of the above"],
+  correct: "Medium to hard"
+},
+{
+  situation: "Situation 11 – Soil Characteristics and Piles",
+  question: "The soil or rock directly beneath a footing is called the:",
+  choices: ["Foundation bed", "Soil", "Grade rock", "None of the above"],
+  correct: "Foundation bed"
+},
+{
+  situation: "Situation 11 – Soil Characteristics and Piles",
+  question: "What is the best soil type for supporting a substructure?",
+  choices: ["Loam", "Clay", "Silt", "Sand"],
+  correct: "Sand"
+},
+{
+  situation: "Situation 11 – Soil Characteristics and Piles",
+  question: "Foundations should ideally extend down to the:",
+  choices: ["Water table", "Loose topsoil", "Bedrock or stable bearing layer", "Compacted backfill"],
+  correct: "Bedrock or stable bearing layer"
+},
+{
+  situation: "Situation 11 – Soil Characteristics and Piles",
+  question: "There are two main types of bearing piles: end-bearing piles and:",
+  choices: ["Floating piles", "Tension piles", "Friction piles", "Load-transfer piles"],
+  correct: "Friction piles"
+},
+
+/* --- Footing Dimensions and Depths --- */
+
+{
+  situation: "Situation 11 – Footing Dimensions and Depths",
+  question: "What is the minimum thickness of a concrete footing (in millimeters)?",
+  choices: ["100", "150", "250", "300"],
+  correct: "150"
+},
+{
+  situation: "Situation 11 – Footing Dimensions and Depths",
+  question: "What is the minimum depth of a footing below the ground surface?",
+  choices: ["300 mm", "400 mm", "500 mm", "600 mm"],
+  correct: "500 mm"
+},
+{
+  situation: "Situation 11 – Footing Dimensions and Depths",
+  question: "What should be the minimum footing depth for a site converted from a rice field?",
+  choices: ["0.60 m", "0.80 m", "1.00 m", "None of the above"],
+  correct: "1.00 m"
+},
+{
+  situation: "Situation 11 – Footing Dimensions and Depths",
+  question: "Which of the following is NOT an acceptable depth below ground for foundation footings?",
+  choices: ["650 mm", "700 mm", "600 mm", "400 mm"],
+  correct: "400 mm"
+},
+{
+  situation: "Situation 11 – Footing Dimensions and Depths",
+  question: "Which of the following is NOT an acceptable thickness for a foundation footing?",
+  choices: ["240 mm", "250 mm", "350 mm", "300 mm"],
+  correct: "240 mm"
+},
+/* --- Foundation Types for Soil Conditions --- */
+
+{
+  situation: "Situation 11 – Foundation Types for Soil Conditions",
+  question: "Which type of foundation is typically used for weak soils?",
+  choices: ["Mat", "Isolated", "Combined", "Strip"],
+  correct: "Mat"
+},
+{
+  situation: "Situation 11 – Foundation Types for Soil Conditions",
+  question: "What is the most suitable footing for weak soil in a flood-prone area?",
+  choices: ["Pile or mat foundation", "Strap footing", "Spread footing", "Isolated footing"],
+  correct: "Pile or mat foundation"
+},
+{
+  situation: "Situation 11 – Foundation Types for Soil Conditions",
+  question: "Which footing is recommended for heavy structures?",
+  choices: ["Spread footing", "Strap footing", "Isolated footing", "Mat foundation"],
+  correct: "Mat foundation"
+},
+{
+  situation: "Situation 11 – Foundation Types for Soil Conditions",
+  question: "What is another term commonly used for a mat foundation?",
+  choices: [
+    "Slab-on-grade foundation",
+    "Continuous footing",
+    "Raft foundation",
+    "Combined footing"
+  ],
+  correct: "Raft foundation"
+},
+{
+  situation: "Situation 11 – Foundation Types for Soil Conditions",
+  question: "What is the minimum thickness of a mat foundation?",
+  choices: ["300 mm", "150 mm", "250 mm", "200 mm"],
+  correct: "300 mm"
+},
+
+/* --- Construction Impact and Adjacent Structures --- */
+
+{
+  situation: "Situation 11 – Construction Impact and Adjacent Structures",
+  question: "Which type of foundation causes the most disturbance and potential damage to adjacent lots during construction?",
+  choices: ["Bored piles", "Isolated footing", "Sheet pile", "Footing with tie beams"],
+  correct: "Sheet pile"
+},
+{
+  situation: "Situation 11 – Construction Impact and Adjacent Structures",
+  question: "What type of foundation is recommended to prevent impact on adjacent structures during construction?",
+  choices: ["Pile or caisson", "Sheet pile", "Strip footing", "Bedrock"],
+  correct: "Pile or caisson"
+},
+{
+  situation: "Situation 11 – Construction Impact and Adjacent Structures",
+  question: "Which foundation type should be used to minimize disturbance to an adjoining high-rise building on flat terrain?",
+  choices: ["Bored piles", "Driven piles", "Floating foundation", "None of the above"],
+  correct: "Bored piles"
+},
+{
+  situation: "Situation 11 – Construction Impact and Adjacent Structures",
+  question: "What type of footing is typically used along property lines?",
+  choices: ["Isolated footing", "Strip footing", "Stepped footing", "Combined footing"],
+  correct: "Combined footing"
+},
+{
+  situation: "Situation 11 – Construction Impact and Adjacent Structures",
+  question: "What type of footing is commonly used to support a bearing wall?",
+  choices: ["Combined footing", "Strip footing", "Mat foundation", "Pile"],
+  correct: "Strip footing"
+},
+
+/* --- Special Site Conditions --- */
+
+{
+  situation: "Situation 11 – Special Site Conditions",
+  question: "What type of foundation is commonly used for a project located on a 35% sloping site?",
+  choices: [
+    "Cantilever footing",
+    "Floating foundation",
+    "Isolated footing with tie beams",
+    "Mat foundation"
+  ],
+  correct: "Cantilever footing"
+},
+{
+  situation: "Situation 11 – Special Site Conditions",
+  question: "What type of foundation is typically used for residential projects built on hard soil?",
+  choices: [
+    "Isolated footing",
+    "Floating foundation",
+    "Isolated footing with tie beams",
+    "Mat foundation"
+  ],
+  correct: "Isolated footing"
+},
+{
+  situation: "Situation 11 – Special Site Conditions",
+  question: "What type of foundation is most suitable for adobe soil?",
+  choices: [
+    "Combined footing",
+    "Strap footing",
+    "Pile foundation",
+    "Isolated footing"
+  ],
+  correct: "Pile foundation"
+},
+{
+  situation: "Situation 11 – Special Site Conditions",
+  question: "What type of footing is recommended for sloping sites?",
+  choices: [
+    "Stepped footing or isolated footing",
+    "Combined footing",
+    "Spread footing",
+    "Strip footing"
+  ],
+  correct: "Stepped footing or isolated footing"
+},
+{
+  situation: "Situation 11 – Special Site Conditions",
+  question: "Which footing is most appropriate for soft soil conditions?",
+  choices: ["Pad footing", "Combined footing", "Isolated footing", "Mat foundation"],
+  correct: "Mat foundation"
+},
+/* --- Shallow and Deep Foundations --- */
+
+{
+  situation: "Situation 11 – Shallow and Deep Foundations",
+  question: "A continuous or strip footing that changes elevation in stages to accommodate a sloping site or varying bearing strata is called a:",
+  choices: ["Raft", "Stepped footing", "Cantilever footing", "Combined footing"],
+  correct: "Stepped footing"
+},
+{
+  situation: "Situation 11 – Shallow and Deep Foundations",
+  question: "What do you call the continuous spread footing used to support a foundation wall?",
+  choices: ["Isolated footing", "Strip footing", "Continuous footing", "Combined footing"],
+  correct: "Strip footing"
+},
+{
+  situation: "Situation 11 – Shallow and Deep Foundations",
+  question: "A cast-in-place concrete foundation formed by boring a shaft into the ground and filling it with concrete is called a:",
+  choices: ["Mandrel", "Caisson", "Sand pile", "Pier"],
+  correct: "Caisson"
+},
+{
+  situation: "Situation 11 – Shallow and Deep Foundations",
+  question: "A foundation wall that encloses a usable space beneath a building is called a:",
+  choices: ["Basement wall", "Cellar", "Crawl space", "Retaining wall"],
+  correct: "Basement wall"
+},
+{
+  situation: "Situation 11 – Shallow and Deep Foundations",
+  question: "Which of the following is an example of a shallow foundation?",
+  choices: ["Pile", "Caisson", "Sheet pile", "Isolated footing"],
+  correct: "Isolated footing"
+},
+
+/* --- Piles and Pile Foundations --- */
+
+{
+  situation: "Situation 11 – Piles and Pile Foundations",
+  question: "What is the hard, pointed or rounded foot of a pile or caisson used to pierce the underlying soil, also known as a driver shoe?",
+  choices: ["Mandrel", "Shoe", "Anvil", "Head pile"],
+  correct: "Shoe"
+},
+{
+  situation: "Situation 11 – Piles and Pile Foundations",
+  question: "What equipment is commonly used for driving piles into the ground?",
+  choices: ["Rotary drill", "Pile hammer", "Auger", "None of the above"],
+  correct: "Pile hammer"
+},
+{
+  situation: "Situation 11 – Piles and Pile Foundations",
+  question: "What material is poured into the hole after drilling for bored piles?",
+  choices: ["Steel", "Concrete", "Wood", "Epoxy polymer"],
+  correct: "Concrete"
+},
+{
+  situation: "Situation 11 – Piles and Pile Foundations",
+  question: "What structural element transfers the loads from the structure to the piles?",
+  choices: ["Pile cap", "Column", "Footing", "None of the above"],
+  correct: "Pile cap"
+},
+{
+  situation: "Situation 11 – Piles and Pile Foundations",
+  question: "What is the name of the iron block that is raised and dropped freely to drive a pile into the ground?",
+  choices: ["Drive pipe", "Drop hammer", "Drop panel", "Driving cap"],
+  correct: "Drop hammer"
+},
+
+/* --- Footings, Anchors, and Aggregates --- */
+
+{
+  situation: "Situation 11 – Footings, Anchors, and Aggregates",
+  question: "Where can you typically find the details for foundation anchor bolts?",
+  choices: ["Foundation plan", "Base plate plan", "Framing plan", "None of the above"],
+  correct: "Foundation plan"
+},
+{
+  situation: "Situation 11 – Footings, Anchors, and Aggregates",
+  question: "What usually happens to a footing when it begins to deform?",
+  choices: ["Bends upward", "Cracks at the bottom", "Twists", "None of the above"],
+  correct: "Cracks at the bottom"
+},
+{
+  situation: "Situation 11 – Footings, Anchors, and Aggregates",
+  question: "What can happen when a column rests on a footing that is not reinforced with rebars?",
+  choices: [
+    "The footing will crack at an angle",
+    "The column will punch through the footing",
+    "There will be noticeable settlement",
+    "None of the above"
+  ],
+  correct: "The column will punch through the footing"
+},
+{
+  situation: "Situation 11 – Footings, Anchors, and Aggregates",
+  question: "What type of aggregate has a dry, loose weight of 1,120 kg/m³ or less?",
+  choices: [
+    "Lightweight aggregate",
+    "Dry weight aggregate",
+    "Heavyweight aggregate",
+    "Substandard aggregate"
+  ],
+  correct: "Lightweight aggregate"
+},
+{
+  situation: "Situation 11 – Footings, Anchors, and Aggregates",
+  question: "What component connects the column base plate to the foundation, securing it against uplift or shear?",
+  choices: ["Tie beam", "Anchor bolt", "Pile cap", "Grout pad"],
+  correct: "Anchor bolt"
+},
+/* --- Reinforcement and Footing Behavior --- */
+
+{
+  situation: "Situation 11 – Reinforcement and Footing Behavior",
+  question: "What is the purpose of reinforcement in a concrete footing?",
+  choices: [
+    "Increases permeability",
+    "Prevents punching shear",
+    "Reduces the weight of concrete",
+    "Speeds up curing"
+  ],
+  correct: "Prevents punching shear"
+},
+{
+  situation: "Situation 11 – Reinforcement and Footing Behavior",
+  question: "What is another term for a mat foundation?",
+  choices: ["Spread foundation", "Pad", "Raft", "None of the above"],
+  correct: "Raft"
+},
+{
+  situation: "Situation 11 – Reinforcement and Footing Behavior",
+  question: "What type of footing is used when the load-bearing capacity of soil is very low?",
+  choices: [
+    "Isolated footing",
+    "Strip footing",
+    "Mat or raft foundation",
+    "Combined footing"
+  ],
+  correct: "Mat or raft foundation"
+},
+{
+  situation: "Situation 11 – Reinforcement and Footing Behavior",
+  question: "What is the main function of reinforcement in a concrete structure?",
+  choices: [
+    "To increase the concrete volume",
+    "To resist tensile stresses",
+    "To reduce concrete shrinkage",
+    "To improve finishing"
+  ],
+  correct: "To resist tensile stresses"
+},
+{
+  situation: "Situation 11 – Reinforcement and Footing Behavior",
+  question: "What is the foundation used when two columns are close together and individual footings would overlap?",
+  choices: ["Strap footing", "Mat footing", "Combined footing", "Slab-on-grade"],
+  correct: "Combined footing"
+},
+
+/* --- Floating and Pile Foundations --- */
+
+{
+  situation: "Situation 11 – Floating and Pile Foundations",
+  question: "A foundation used in yielding soil, with its footing designed as a raft placed deep enough that the weight of the excavated soil equals or exceeds the weight of the building, is called a:",
+  choices: [
+    "Floating foundation",
+    "Shallow foundation",
+    "Deep foundation",
+    "Pile foundation"
+  ],
+  correct: "Floating foundation"
+},
+{
+  situation: "Situation 11 – Floating and Pile Foundations",
+  question: "This is a system of end-bearing or friction piles, pile caps, and tie beams used to transfer building loads down to a suitable bearing stratum:",
+  choices: [
+    "Isolated foundation",
+    "Sheet piles",
+    "Pile foundation",
+    "Wooden piles"
+  ],
+  correct: "Pile foundation"
+},
+{
+  situation: "Situation 11 – Floating and Pile Foundations",
+  question: "What is the general term for sheets and piles placed against the earth in swampy or unstable areas?",
+  choices: ["Strip footing", "Earth piles", "Sheet piles", "None of the above"],
+  correct: "Sheet piles"
+},
+{
+  situation: "Situation 11 – Floating and Pile Foundations",
+  question: "What do you call a pile driven at an angle to resist lateral loads and uplift forces?",
+  choices: [
+    "Straight pile",
+    "End-bearing pile",
+    "Friction pile",
+    "Battered pile"
+  ],
+  correct: "Battered pile"
+},
+{
+  situation: "Situation 11 – Floating and Pile Foundations",
+  question: "What is the minimum size of aggregates used as bedding material?",
+  choices: ["25 mm", "40 mm", "50 mm", "100 mm"],
+  correct: "50 mm"
+},
+
+/* --- Code-Based Foundation Requirements --- */
+
+{
+  situation: "Situation 11 – Code-Based Foundation Requirements",
+  question: "When the soil is weak, which type of foundation is suitable for distributing the heavy load of a building?",
+  choices: [
+    "Pile foundation",
+    "Combined foundation",
+    "Mat foundation",
+    "Tie beam foundation"
+  ],
+  correct: "Mat foundation"
+},
+{
+  situation: "Situation 11 – Code-Based Foundation Requirements",
+  question: "Which type of soil among the options has the weakest bearing capacity?",
+  choices: [
+    "Gravel and sand",
+    "Medium clays",
+    "Organic silt and clays",
+    "Peat"
+  ],
+  correct: "Peat"
+},
+{
+  situation: "Situation 11 – Code-Based Foundation Requirements",
+  question: "What do you call a foundation consisting of two or more column footings connected by a beam?",
+  choices: [
+    "Strap footing",
+    "Tie beam",
+    "Combined footing",
+    "Spread footing"
+  ],
+  correct: "Strap footing"
+},
+{
+  situation: "Situation 11 – Code-Based Foundation Requirements",
+  question: "According to the Building Code, what is the minimum thickness of a footing?",
+  choices: ["300 mm", "250 mm", "350 mm", "200 mm"],
+  correct: "250 mm"
+},
+{
+  situation: "Situation 11 – Code-Based Foundation Requirements",
+  question: "For Group A dwellings, what is the minimum depth of a footing as required by the Building Code?",
+  choices: ["400 mm", "500 mm", "600 mm", "300 mm"],
+  correct: "600 mm"
+},
+/* =========================
+   SITUATION 12 – COLUMNS AND BEAMS, LOADS
+   ========================= */
+
+/* --- Reinforcement Sizes and Proportions --- */
+
+{
+  situation: "Situation 12 – Reinforcement Sizes and Proportions",
+  question: "What is the minimum size of reinforcing bars used for columns?",
+  choices: ["10 mm diameter", "12 mm diameter", "16 mm diameter", "20 mm diameter"],
+  correct: "12 mm diameter"
+},
+{
+  situation: "Situation 12 – Reinforcement Sizes and Proportions",
+  question: "What is the minimum size of reinforcing bars used for ties?",
+  choices: ["10 mm diameter", "12 mm diameter", "16 mm diameter", "20 mm diameter"],
+  correct: "10 mm diameter"
+},
+{
+  situation: "Situation 12 – Reinforcement Sizes and Proportions",
+  question: "As a rule of thumb, the beam width should be _____ the column width.",
+  choices: ["Smaller", "Bigger", "Equal", "Longer"],
+  correct: "Smaller"
+},
+{
+  situation: "Situation 12 – Reinforcement Sizes and Proportions",
+  question: "What should be the minimum column size at the ground floor for a span of 8 meters?",
+  choices: ["0.50 m × 0.50 m", "0.70 m × 0.70 m", "1.20 m × 1.20 m", "1.60 m × 1.60 m"],
+  correct: "0.70 m × 0.70 m"
+},
+{
+  situation: "Situation 12 – Reinforcement Sizes and Proportions",
+  question: "Based on standard structural design guidelines, what is the minimum recommended size for a reinforced concrete column to ensure stability and adequate load-bearing capacity?",
+  choices: ["150 mm × 250 mm", "200 mm × 200 mm", "200 mm × 300 mm", "250 mm × 400 mm"],
+  correct: "200 mm × 200 mm"
+},
+
+/* --- Column Behavior and Types --- */
+
+{
+  situation: "Situation 12 – Column Behavior and Types",
+  question: "What do you call a column that is not aligned with the columns on the lower level?",
+  choices: ["False column", "Short column", "Planted column", "Under-reinforced column"],
+  correct: "Planted column"
+},
+{
+  situation: "Situation 12 – Column Behavior and Types",
+  question: "What is the maximum axial load that can theoretically be applied to a column without causing buckling?",
+  choices: [
+    "Critical buckling stress",
+    "Critical buckling load",
+    "Buckling",
+    "Eccentricity"
+  ],
+  correct: "Critical buckling load"
+},
+{
+  situation: "Situation 12 – Column Behavior and Types",
+  question: "What does the slenderness ratio of a column primarily determine?",
+  choices: [
+    "Effective length",
+    "Buckling",
+    "Effective depth",
+    "Maximum column height"
+  ],
+  correct: "Buckling"
+},
+{
+  situation: "Situation 12 – Column Behavior and Types",
+  question: "What is a column filled with poured concrete commonly called?",
+  choices: ["Tied", "Spiral", "Lally", "Long column"],
+  correct: "Lally"
+},
+{
+  situation: "Situation 12 – Column Behavior and Types",
+  question: "What do you call a column that raises or supports a structure above ground level?",
+  choices: ["Pier", "Stilts", "Posts", "Piles"],
+  correct: "Pier"
+},
+
+/* --- Column Materials and Failure Modes --- */
+
+{
+  situation: "Situation 12 – Column Materials and Failure Modes",
+  question: "What type of wood column consists of a single piece of wood with a square or rectangular cross-section?",
+  choices: [
+    "Tapered column",
+    "Glued-laminated column",
+    "Built-up column",
+    "Solid wood column"
+  ],
+  correct: "Solid wood column"
+},
+{
+  situation: "Situation 12 – Column Materials and Failure Modes",
+  question: "What do you call a thick column that tends to fail by crushing rather than buckling?",
+  choices: [
+    "Long column",
+    "Composite column",
+    "Short column",
+    "All of the above"
+  ],
+  correct: "Short column"
+},
+{
+  situation: "Situation 12 – Column Materials and Failure Modes",
+  question: "What is the phenomenon called when a perfectly straight column under compression assumes a deflected shape?",
+  choices: ["Buckling", "Creep", "Elongation", "None of the above"],
+  correct: "Buckling"
+},
+{
+  situation: "Situation 12 – Column Materials and Failure Modes",
+  question: "Ties are typically used in which structural element?",
+  choices: ["Beams", "Columns", "Slabs", "Footings"],
+  correct: "Columns"
+},
+{
+  situation: "Situation 12 – Column Materials and Failure Modes",
+  question: "What type of force tends to shorten a structural member?",
+  choices: ["Tension", "Compression", "Bending", "Torsion"],
+  correct: "Compression"
+},
+/* --- Column Performance Under Load --- */
+
+{
+  situation: "Situation 12 – Column Performance Under Load",
+  question: "What typically happens to a short column under load?",
+  choices: ["Elongates", "Buckles", "Deforms", "Deflects"],
+  correct: "Deflects"
+},
+{
+  situation: "Situation 12 – Column Performance Under Load",
+  question: "Which type of column is most likely to fail due to buckling?",
+  choices: ["Short column", "Long column", "Pedestal", "None of the above"],
+  correct: "Long column"
+},
+{
+  situation: "Situation 12 – Column Performance Under Load",
+  question: "Which type of column commonly fails due to buckling?",
+  choices: ["Intermediate column", "Short column", "Long column", "Pedestal"],
+  correct: "Long column"
+},
+{
+  situation: "Situation 12 – Column Performance Under Load",
+  question: "Which type of column commonly fails due to crushing?",
+  choices: ["Intermediate column", "Short column", "Long column", "Pedestal"],
+  correct: "Short column"
+},
+{
+  situation: "Situation 12 – Column Performance Under Load",
+  question: "What is a long column primarily designed to resist?",
+  choices: ["Buckling", "Crushing", "Elongation", "Hardness"],
+  correct: "Buckling"
+},
+
+/* --- Column Design and Detailing --- */
+
+{
+  situation: "Situation 12 – Column Design and Detailing",
+  question: "Which is considered the most efficient column shape for structural performance?",
+  choices: ["Square", "Rectangular", "Triangular", "None of the above"],
+  correct: "Square"
+},
+{
+  situation: "Situation 12 – Column Design and Detailing",
+  question: "What is the main purpose of a post base in column construction?",
+  choices: [
+    "To anchor the column to a slab-on-grade",
+    "To prevent corrosion of the steel",
+    "To reinforce the footing size",
+    "To transmit the load from the column to the footing"
+  ],
+  correct: "To transmit the load from the column to the footing"
+},
+{
+  situation: "Situation 12 – Column Design and Detailing",
+  question: "Which type of reinforcement is commonly used to resist lateral forces in a reinforced concrete column?",
+  choices: ["Main bars", "Lateral ties", "Dowels", "Stirrups"],
+  correct: "Lateral ties"
+},
+{
+  situation: "Situation 12 – Column Design and Detailing",
+  question: "What is the typical function of a column in a structural system?",
+  choices: [
+    "To resist horizontal movement",
+    "To distribute lateral forces to beams",
+    "To transfer axial loads from slabs and beams to the foundation",
+    "To serve as architectural support only"
+  ],
+  correct: "To transfer axial loads from slabs and beams to the foundation"
+},
+{
+  situation: "Situation 12 – Column Design and Detailing",
+  question: "What is the purpose of providing cover to reinforcement bars in a concrete column?",
+  choices: [
+    "For aesthetics",
+    "To reduce construction cost",
+    "To protect steel from corrosion and fire",
+    "To add weight to the column"
+  ],
+  correct: "To protect steel from corrosion and fire"
+},
+/* --- Beams and Beam Types --- */
+
+{
+  situation: "Situation 12 – Beams and Beam Types",
+  question: "What do you call a projecting beam that is fixed at one end while the other end has no support?",
+  choices: ["Single supported", "Cantilever", "Overhanging", "Continuous"],
+  correct: "Cantilever"
+},
+{
+  situation: "Situation 12 – Beams and Beam Types",
+  question: "Why are inverted beams used?",
+  choices: [
+    "To minimize surface cracking in the beam",
+    "For architectural aesthetics",
+    "To provide added strength in cantilevered roofs",
+    "To allow for headroom clearance"
+  ],
+  correct: "To allow for headroom clearance"
+},
+{
+  situation: "Situation 12 – Beams and Beam Types",
+  question: "What do you call a beam, located either below or above ground, used to connect two structural members and prevent them from spreading apart?",
+  choices: ["Lally beam", "Plinth girder", "Connection beam", "Tie beam"],
+  correct: "Tie beam"
+},
+{
+  situation: "Situation 12 – Beams and Beam Types",
+  question: "What is a beam that spans horizontally over a door opening called?",
+  choices: ["Door header", "Lintel beam", "Door beam", "Header beam"],
+  correct: "Lintel beam"
+},
+{
+  situation: "Situation 12 – Beams and Beam Types",
+  question: "What type of column features a continuous helical bar wrapped around it?",
+  choices: ["Spiral", "Helical", "Tied", "Reinforced concrete"],
+  correct: "Spiral"
+},
+/* --- Slabs and Roofing Members --- */
+
+{
+  situation: "Situation 13 – Slabs and Roofing Members",
+  question: "Which of the following is a composite slab?",
+  choices: ["Figure C", "Figure B", "Figure D", "Figure A"],
+  correct: "Figure B",
+  image: "figure13-A.png"
+},
+{
+  situation: "Situation 13 – Slabs and Roofing Members",
+  question: "Which of the following is a post-tensioned slab?",
+  choices: ["Figure D", "Figure C", "Figure B", "Figure E"],
+  correct: "Figure D",
+  image: "figure13-A.png"
+},
+{
+  situation: "Situation 13 – Slabs and Roofing Members",
+  question: "What is the typical thickness of a roof slab (in millimeters)?",
+  choices: ["400 mm", "500 mm", "600 mm", "700 mm"],
+  correct: "400 mm"
+},
+{
+  situation: "Situation 13 – Slabs and Roofing Members",
+  question: "What is the most common section of purlins used locally?",
+  choices: ["C-purlins", "L-angle", "I-beams", "T-beam"],
+  correct: "C-purlins"
+},
+{
+  situation: "Situation 13 – Slabs and Roofing Members",
+  question: "What is the typical distance between roof purlins?",
+  choices: ["0.90 m", "0.60 m", "0.30 m", "0.50 m"],
+  correct: "0.60 m"
+},
+/* =========================
+   SITUATION 15 – WALLS, LOADS
+   ========================= */
+
+/* --- Retaining Wall Types (Figure 15-A) --- */
+
+{
+  situation: "Situation 15 – Retaining Wall Types",
+  question: "Which one is a cantilever wall?",
+  choices: ["Figure A", "Figure B", "Figure C", "Figure D"],
+  correct: "Figure A",
+  image: "figure15-A.png"
+},
+{
+  situation: "Situation 15 – Retaining Wall Types",
+  question: "Which one is a gravity wall?",
+  choices: ["Figure C", "Figure A", "Figure B", "Figure E"],
+  correct: "Figure B",
+  image: "figure15-A.png"
+},
+{
+  situation: "Situation 15 – Retaining Wall Types",
+  question: "Which one is an anchored wall?",
+  choices: ["Figure E", "Figure A", "Figure C", "Figure D"],
+  correct: "Figure E",
+  image: "figure15-A.png"
+},
+{
+  situation: "Situation 15 – Retaining Wall Types",
+  question: "Which one is a buttress wall?",
+  choices: ["Figure A", "Figure B", "Figure D", "Figure C"],
+  correct: "Figure C",
+  image: "figure15-A.png"
+},
+{
+  situation: "Situation 15 – Retaining Wall Types",
+  question: "Which one is a counterfort wall?",
+  choices: ["Figure E", "Figure A", "Figure B", "Figure C"],
+  correct: "Figure A",
+  image: "figure15-A.png"
+},
+
+/* --- Shear Walls and CHB Properties --- */
+
+{
+  situation: "Situation 15 – Shear Walls and CHB Properties",
+  question: "Where is the ideal location for placing a shear wall?",
+  choices: [
+    "Elevator/stairwell",
+    "Center of the building",
+    "Between interior walls",
+    "Exterior walls"
+  ],
+  correct: "Elevator/stairwell"
+},
+{
+  situation: "Situation 15 – Shear Walls and CHB Properties",
+  question: "What is the main purpose of a shear wall in a structure?",
+  choices: [
+    "To resist lateral forces",
+    "To carry vertical loads only",
+    "To provide thermal insulation",
+    "To divide interior spaces"
+  ],
+  correct: "To resist lateral forces"
+},
+{
+  situation: "Situation 15 – Shear Walls and CHB Properties",
+  question: "What is the compressive strength of non-load-bearing concrete hollow blocks (CHB)?",
+  choices: ["300 psi", "350 psi", "400 psi", "450 psi"],
+  correct: "400 psi"
+},
+{
+  situation: "Situation 15 – Shear Walls and CHB Properties",
+  question: "What is the compressive strength of load-bearing concrete hollow blocks (CHB)?",
+  choices: ["550 psi", "650 psi", "700 psi", "750 psi"],
+  correct: "700 psi"
+},
+{
+  situation: "Situation 15 – Shear Walls and CHB Properties",
+  question: "What element is added inside hollow blocks to increase their load-bearing capacity?",
+  choices: [
+    "Steel reinforcement",
+    "Gypsum lining",
+    "Plastic filler",
+    "Wooden dowels"
+  ],
+  correct: "Steel reinforcement"
+},
+
+/* --- CHB Dimensions and Spacing --- */
+
+{
+  situation: "Situation 15 – CHB Dimensions and Spacing",
+  question: "What is the minimum thickness of a load-bearing CHB available in the Philippines?",
+  choices: ["100 mm", "150 mm", "200 mm", "250 mm"],
+  correct: "100 mm"
+},
+{
+  situation: "Situation 15 – CHB Dimensions and Spacing",
+  question: "What is the horizontal structural member in a framed wall that provides lateral support to the wall panel?",
+  choices: ["Purlin", "Lintel beam", "Stud", "Girt"],
+  correct: "Girt"
+},
+{
+  situation: "Situation 15 – CHB Dimensions and Spacing",
+  question: "What is the maximum spacing between stiffener columns in an ordinary CHB wall?",
+  choices: ["3 meters", "4 meters", "5 meters", "6 meters"],
+  correct: "4 meters"
+},
+{
+  situation: "Situation 15 – CHB Dimensions and Spacing",
+  question: "What is the minimum thickness of a CHB wall required to achieve a 1-hour fire rating?",
+  choices: ["100 mm", "150 mm", "200 mm", "250 mm"],
+  correct: "150 mm"
+},
+{
+  situation: "Situation 15 – CHB Dimensions and Spacing",
+  question: "A stiffener beam is required for a CHB wall if the wall height exceeds:",
+  choices: ["2 meters", "3 meters", "4 meters", "5 meters"],
+  correct: "3 meters"
+},
+/* =========================
+   SITUATION 15 – WALLS, LOADS (CONTINUED)
+   ========================= */
+
+/* --- Reinforcement in CHB Walls --- */
+
+{
+  situation: "Situation 15 – Reinforcement in CHB Walls",
+  question: "What is the standard horizontal spacing of reinforcement bars for a firewall?",
+  choices: ["Every 2 layers", "Every 3 layers", "Every 4 layers", "Every 5 layers"],
+  correct: "Every 3 layers"
+},
+{
+  situation: "Situation 15 – Reinforcement in CHB Walls",
+  question: "What is the minimum size of reinforcing bars required for a 3-meter-high wall?",
+  choices: ["8 mm", "10 mm", "12 mm", "16 mm"],
+  correct: "12 mm"
+},
+{
+  situation: "Situation 15 – Reinforcement in CHB Walls",
+  question: "What is the typical size of reinforcing bars used for an 8-inch CHB wall?",
+  choices: ["10 mm", "12 mm", "16 mm", "20 mm"],
+  correct: "12 mm"
+},
+{
+  situation: "Situation 15 – Reinforcement in CHB Walls",
+  question: "What is the minimum CHB thickness for non-load-bearing walls?",
+  choices: ["100 mm", "150 mm", "200 mm", "300 mm"],
+  correct: "100 mm"
+},
+{
+  situation: "Situation 15 – Reinforcement in CHB Walls",
+  question: "What is the minimum CHB thickness for load-bearing walls?",
+  choices: ["100 mm", "125 mm", "150 mm", "None of the above"],
+  correct: "150 mm"
+},
+
+/* --- Retaining Walls and Failure Modes --- */
+
+{
+  situation: "Situation 15 – Retaining Walls and Failure Modes",
+  question: "What type of wall is used to support and protect different ground levels?",
+  choices: ["Retaining wall", "Tie beam", "Cantilever wall", "Deep wall"],
+  correct: "Retaining wall"
+},
+{
+  situation: "Situation 15 – Retaining Walls and Failure Modes",
+  question: "What is the most common type of failure in a retaining wall?",
+  choices: [
+    "Failure at the moment arm",
+    "Punch-through failure",
+    "All of the above",
+    "None of the above"
+  ],
+  correct: "All of the above"
+},
+{
+  situation: "Situation 15 – Retaining Walls and Failure Modes",
+  question: "What type of wall is used to resist soil pressure and retain earth at different elevations?",
+  choices: ["Partition wall", "Grade beam", "Shear wall", "Retaining wall"],
+  correct: "Retaining wall"
+},
+{
+  situation: "Situation 15 – Retaining Walls and Failure Modes",
+  question: "What structural element is often integrated at the base of a retaining wall to increase stability?",
+  choices: ["Base slab", "Lintel beam", "Expansion joint", "Drop panel"],
+  correct: "Base slab"
+},
+{
+  situation: "Situation 15 – Retaining Walls and Failure Modes",
+  question: "What construction feature is usually provided behind a retaining wall to reduce hydrostatic pressure?",
+  choices: ["Concrete stiffener", "Weep holes", "Retaining bars", "Gutter strip"],
+  correct: "Weep holes"
+},
+
+/* --- Shear Wall Behavior and Placement --- */
+
+{
+  situation: "Situation 15 – Shear Wall Behavior and Placement",
+  question: "Which condition is considered most dangerous for a shear wall?",
+  choices: [
+    "Shear wall with many openings",
+    "Shear wall located at the center",
+    "Shear wall located at the outer edge of the building",
+    "None of the above"
+  ],
+  correct: "Shear wall with many openings"
+},
+{
+  situation: "Situation 15 – Shear Wall Behavior and Placement",
+  question: "Where do shear walls typically rest?",
+  choices: ["Footing", "Foundation", "Ground floor", "Second floor"],
+  correct: "Foundation"
+},
+{
+  situation: "Situation 15 – Shear Wall Behavior and Placement",
+  question: "Considering seismic conditions, where is the preferred location for a shear wall (utility core) in a 15-storey building with a width of 15 m and length of 25 m?",
+  choices: ["Left side", "Right side", "Front", "Center"],
+  correct: "Center"
+},
+{
+  situation: "Situation 15 – Shear Wall Behavior and Placement",
+  question: "What type of wall is specifically designed to resist lateral forces parallel to its plane?",
+  choices: [
+    "Earthquake-resistant wall",
+    "Shear wall",
+    "Horizontal diaphragm wall",
+    "Diaphragm"
+  ],
+  correct: "Shear wall"
+},
+{
+  situation: "Situation 15 – Shear Wall Behavior and Placement",
+  question: "What is the boundary element of a diaphragm or shear wall that resists axial stress?",
+  choices: [
+    "Diaphragm strut",
+    "Drag strut",
+    "Horizontal brace",
+    "Diaphragm chord"
+  ],
+  correct: "Diaphragm chord"
+},
+/* =========================
+   SITUATION 15 – WALLS, LOADS (CONTINUED)
+   ========================= */
+
+/* --- CHB Dimensions, Stress, and Quantities --- */
+
+{
+  situation: "Situation 15 – CHB Dimensions, Stress, and Quantities",
+  question: "What is the nominal thickness of a concrete hollow block (CHB) for an exterior wall without plastering?",
+  choices: ["150 mm", "100 mm", "200 mm", "None of the above"],
+  correct: "100 mm"
+},
+{
+  situation: "Situation 15 – CHB Dimensions, Stress, and Quantities",
+  question: "Which of the following is NOT a standard thickness for a CHB?",
+  choices: ["4 inches", "6 inches", "8 inches", "10 inches"],
+  correct: "10 inches"
+},
+{
+  situation: "Situation 15 – CHB Dimensions, Stress, and Quantities",
+  question: "Which of the following is NOT a commonly used CHB thickness?",
+  choices: ['4"', '5"', '6"', '8"'],
+  correct: '5"'
+},
+{
+  situation: "Situation 15 – CHB Dimensions, Stress, and Quantities",
+  question: "A brick wall is weak in which type of stress?",
+  choices: ["Tension", "Compression", "Torsion", "None of the above"],
+  correct: "Tension"
+},
+{
+  situation: "Situation 15 – CHB Dimensions, Stress, and Quantities",
+  question: "How many CHB units are required for a wall measuring 10.2 m in length and 3.3 m in height, excluding a 300 mm lintel beam and 300 mm wide stiffener column, including a 5% contingency allowance?",
+  choices: ["366", "355", "378", "388"],
+  correct: "378"
+},
+
+/* --- Reinforcement Spacing in CHB Walls --- */
+
+{
+  situation: "Situation 15 – Reinforcement Spacing in CHB Walls",
+  question: "Horizontal bars used in CHB walls are typically installed at what spacing?",
+  choices: [
+    "600 mm every 3 layers",
+    "600 mm every 4 layers",
+    "400 mm every 3 layers",
+    "400 mm every 4 layers"
+  ],
+  correct: "600 mm every 4 layers"
+},
+{
+  situation: "Situation 15 – Reinforcement Spacing in CHB Walls",
+  question: "What is the standard spacing for vertical reinforcement in a CHB wall?",
+  choices: ["0.30 m", "0.60 m", "0.80 m", "1.00 m"],
+  correct: "1.00 m"
+},
+{
+  situation: "Situation 15 – Reinforcement Spacing in CHB Walls",
+  question: "What is the typical spacing for both vertical and horizontal bars in a CHB wall?",
+  choices: ["40 cm", "50 cm", "60 cm", "70 cm"],
+  correct: "60 cm"
+},
+{
+  situation: "Situation 15 – Reinforcement Spacing in CHB Walls",
+  question: "What is the recommended size of deformed steel bar (DSB) for use in a 4-inch CHB wall?",
+  choices: ["8 mm", "10 mm", "12 mm", "14 mm"],
+  correct: "8 mm"
+},
+{
+  situation: "Situation 15 – Reinforcement Spacing in CHB Walls",
+  question: "What is the recommended size of deformed steel bar (DSB) for use in an 8-inch CHB wall?",
+  choices: ["8 mm", "10 mm", "12 mm", "14 mm"],
+  correct: "12 mm"
+},
+
+/* --- Purpose and Code Requirements --- */
+
+{
+  situation: "Situation 15 – Purpose and Code Requirements",
+  question: "What is the purpose of horizontal and vertical reinforcement in CHB walls?",
+  choices: [
+    "For decoration",
+    "To reduce weight",
+    "For moisture resistance",
+    "To resist earthquake and wind loads"
+  ],
+  correct: "To resist earthquake and wind loads"
+},
+{
+  situation: "Situation 15 – Purpose and Code Requirements",
+  question: "What is the standard spacing of horizontal reinforcement in CHB walls?",
+  choices: [
+    "Every 2 layers",
+    "0.60 m or every 3 layers",
+    "1.0 m",
+    "0.90 m"
+  ],
+  correct: "0.60 m or every 3 layers"
+},
+{
+  situation: "Situation 15 – Purpose and Code Requirements",
+  question: "What is the minimum dead load requirement for a wall?",
+  choices: ["5 kPa", "0.5 kPa", "1 kPa", "2 kPa"],
+  correct: "0.5 kPa"
+},
+{
+  situation: "Situation 15 – Purpose and Code Requirements",
+  question: "Which of the following structural elements can be constructed along the side or rear property line on relatively flat terrain?",
+  choices: [
+    "Firewalls and perimeter wall",
+    "End wall",
+    "Retaining wall",
+    "Zócalo"
+  ],
+  correct: "Firewalls and perimeter wall"
+},
+{
+  situation: "Situation 15 – Purpose and Code Requirements",
+  question: "What is the most commonly used size of reinforcing bars for both vertical and horizontal reinforcement in CHB walls (in millimeters)?",
+  choices: ["8 mm", "10 mm", "12 mm", "16 mm"],
+  correct: "10 mm"
+},
+/* =========================
+   SITUATION 16 – CONNECTORS
+   ========================= */
+
+/* --- Identification of Connectors (Figure 16-A) --- */
+
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Figure A, a bolt used to fasten a structure to a foundation, typically for holding steel columns or beams in place?",
+  choices: ["Through bolt", "Dowel pin", "Anchor bolt", "Expansion anchor"],
+  correct: "Anchor bolt",
+  image: "figure16-A.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Figure B, a metal plate used to connect and reinforce the joints of a truss, beam, or column in structural applications?",
+  choices: ["Connection plate", "Gusset plate", "Splice plate", "Bearing plate"],
+  correct: "Gusset plate",
+  image: "figure16-A.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Figure C, a metal connector used to join wood trusses, often in the form of a metal plate with nails driven through it?",
+  choices: ["Gusset plate", "Gang nail", "Connector plate", "Shear plate"],
+  correct: "Gang nail",
+  image: "figure16-A.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Figure D, a type of bolt that expands when tightened, used to anchor structures to concrete or masonry?",
+  choices: ["Concrete fastener", "Expansion bolt", "Lag bolt", "Anchor bolt"],
+  correct: "Expansion bolt",
+  image: "figure16-A.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Figure E, a type of stud welded to steel beams or plates to improve the shear connection between concrete and steel in composite construction?",
+  choices: ["Rivet", "Shear stud", "Connection stud", "Anchor stud"],
+  correct: "Shear stud",
+  image: "figure16-A.png"
+},
+
+/* --- Identification of Connectors (Figure 16-B) --- */
+
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Item A?",
+  choices: ["Anchor bolt", "Column cap", "Base plate", "Post base"],
+  correct: "Base plate",
+  image: "figure16-B.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Item B?",
+  choices: ["Truss hanger", "Angle bracket", "Ledger connector", "Sill plate"],
+  correct: "Truss hanger",
+  image: "figure16-B.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Item C?",
+  choices: ["Drop-in anchor", "Wedge anchor", "Sleeve anchor", "Lag shield anchor"],
+  correct: "Wedge anchor",
+  image: "figure16-B.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Item D?",
+  choices: ["Post cap", "Truss hanger", "Post base", "Joist connector"],
+  correct: "Post base",
+  image: "figure16-B.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "What is Item E used for?",
+  choices: ["Glass installations", "Concrete connections", "Wood connections", "Steel installations"],
+  correct: "Wood connections",
+  image: "figure16-B.png"
+},
+
+/* --- Identification of Connectors (Figure 16-E) --- */
+
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "Which connector is used for drywall construction?",
+  choices: ["Figure C", "Figure D", "Figure E", "Figure B"],
+  correct: "Figure E",
+  image: "figure16-E.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "Which connector is used for steel construction?",
+  choices: ["Figure E", "Figure A", "Figure B", "Figure D"],
+  correct: "Figure A",
+  image: "figure16-E.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "Which connector is used for roofing work?",
+  choices: ["Figure B", "Figure E", "Figure D", "Figure C"],
+  correct: "Figure E",
+  image: "figure16-E.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "Which connector is used for woodworking?",
+  choices: ["Figure B", "Figure E", "Figure C", "Figure A"],
+  correct: "Figure C",
+  image: "figure16-E.png"
+},
+{
+  situation: "Situation 16 – Identification of Connectors",
+  question: "Which connector is used for both concrete and steel construction?",
+  choices: ["Figure A", "Figure C", "Figure D", "Figure E"],
+  correct: "Figure A",
+  image: "figure16-E.png"
+},
+/* =========================
+   SITUATION 16 – CONNECTORS (CONTINUED)
+   ========================= */
+
+/* --- General Connector Concepts --- */
+
+{
+  situation: "Situation 16 – General Connector Concepts",
+  question: "What do you call a short steel bar that extends from one concrete element to another, such as from a foundation to a column?",
+  choices: ["Corbel", "Temperature bars", "Stirrups", "Dowel"],
+  correct: "Dowel"
+},
+{
+  situation: "Situation 16 – General Connector Concepts",
+  question: "How is a pre-stressed concrete element typically connected to reinforced concrete?",
+  choices: ["Dowel", "Mortar", "Axle", "None of the above"],
+  correct: "Dowel"
+},
+{
+  situation: "Situation 16 – General Connector Concepts",
+  question: "What is the primary function of a shear stud?",
+  choices: [
+    "To distribute the load from the slab to the beam",
+    "To connect steel decking to beams",
+    "To anchor formwork to concrete",
+    "To connect columns to beams"
+  ],
+  correct: "To distribute the load from the slab to the beam"
+},
+{
+  situation: "Situation 16 – General Connector Concepts",
+  question: "What type of anchor bolt is used in masonry and consists of a split malleable-iron cone that expands when tightened?",
+  choices: ["Contraction bolt", "Expansion bolt", "Bearing bolt", "Extrusion bolt"],
+  correct: "Expansion bolt"
+},
+{
+  situation: "Situation 16 – General Connector Concepts",
+  question: "Which element is placed at construction joints to ensure load transfer between two separate concrete pours?",
+  choices: ["Expansion joint", "Shear key", "Dowel bar", "Anchor bolt"],
+  correct: "Dowel bar"
+},
+
+/* --- Joints and Movement Control --- */
+
+{
+  situation: "Situation 16 – Joints and Movement Control",
+  question: "What is the vertical or horizontal surface in a concrete structure where pouring was stopped and resumed later?",
+  choices: [
+    "Expansion joint",
+    "Construction joint",
+    "Control joint",
+    "Thermal expansion"
+  ],
+  correct: "Construction joint"
+},
+{
+  situation: "Situation 16 – Joints and Movement Control",
+  question: "What is the standard gap for a construction joint?",
+  choices: ["20 mm", "10 mm", "40 mm", "30 mm"],
+  correct: "10 mm"
+},
+{
+  situation: "Situation 16 – Joints and Movement Control",
+  question: "What material is commonly used as a filler for an expansion joint?",
+  choices: ["Foam", "Grout", "Mortar", "Bitumen"],
+  correct: "Bitumen"
+},
+{
+  situation: "Situation 16 – Joints and Movement Control",
+  question: "What is the purpose of a seismic gap in buildings?",
+  choices: [
+    "A gap between reinforcement bars during column pouring",
+    "A minimum gap between adjacent buildings to avoid pounding during seismic activity",
+    "A thermal expansion gap in roof slabs due to temperature change",
+    "None of the above"
+  ],
+  correct: "A minimum gap between adjacent buildings to avoid pounding during seismic activity"
+},
+{
+  situation: "Situation 16 – Joints and Movement Control",
+  question: "What is an assembly designed to absorb heat-induced expansion and contraction, vibration, or movement caused by settlement or earthquakes?",
+  choices: [
+    "Construction joint",
+    "Expansion joint",
+    "Doweled joint",
+    "None of the above"
+  ],
+  correct: "Expansion joint"
+},
+
+/* --- Light-Gauge and Steel Connectors --- */
+
+{
+  situation: "Situation 16 – Light-Gauge and Steel Connectors",
+  question: "What refers to long, light-gauge materials used to support or hold finishing materials such as drywall or ceiling boards?",
+  choices: ["Drywall", "Steel frame", "Steel deck", "Metal furring"],
+  correct: "Metal furring"
+},
+{
+  situation: "Situation 16 – Light-Gauge and Steel Connectors",
+  question: "What steel plate is used to connect the members of a truss?",
+  choices: ["Base plate", "Lacing", "Tie plate", "Gusset plate"],
+  correct: "Gusset plate"
+},
+{
+  situation: "Situation 16 – Light-Gauge and Steel Connectors",
+  question: "What are diagonal light metal members used to form a composite strut in steel construction?",
+  choices: ["Tie plates", "Shear connectors", "Lacing", "Base plates"],
+  correct: "Lacing"
+},
+{
+  situation: "Situation 16 – Light-Gauge and Steel Connectors",
+  question: "What is the minimum splice length for reinforcing bars (rebar)?",
+  choices: ["30db", "40db", "50db", "60db"],
+  correct: "40db"
+},
+{
+  situation: "Situation 16 – Light-Gauge and Steel Connectors",
+  question: "What is the purpose of a gusset plate in a steel truss?",
+  choices: [
+    "To add weight for seismic resistance",
+    "To fasten roofing sheets",
+    "To connect truss members and transfer loads",
+    "To anchor the truss to the foundation"
+  ],
+  correct: "To connect truss members and transfer loads"
+},
+/* =========================
+   SITUATION 17 – STEEL CONSTRUCTION
+   ========================= */
+
+/* --- Identification of Steel Materials (Figure 17-A) --- */
+
+{
+  situation: "Situation 17 – Identification of Steel Materials",
+  question: "What is Figure A, a type of metal sheet that has a pattern of holes or slots punched in it, often used for filtering, ventilation, and decorative purposes?",
+  choices: ["Expanded metal", "Perforated metal sheet", "Slotted plate", "Decorative mesh"],
+  correct: "Perforated metal sheet",
+  image: "figure17-A.png"
+},
+{
+  situation: "Situation 17 – Identification of Steel Materials",
+  question: "What is Figure B, a sheet of metal that has been slit and stretched to form a mesh pattern, often used in security fencing or as a structural mesh?",
+  choices: ["Perforated metal", "Expanded metal", "Welded mesh", "Wire fabric"],
+  correct: "Expanded metal",
+  image: "figure17-A.png"
+},
+{
+  situation: "Situation 17 – Identification of Steel Materials",
+  question: "What is Figure C, a metal sheet with a raised diamond pattern, commonly used for flooring, stair treads, and walkways?",
+  choices: ["Checker metal sheet", "Corrugated metal", "Ribbed plate", "Deck plate"],
+  correct: "Checker metal sheet",
+  image: "figure17-A.png"
+},
+{
+  situation: "Situation 17 – Identification of Steel Materials",
+  question: "What is Figure D, a type of metal sheet with a series of parallel ridges or grooves, often used in roofing, siding, and construction for its strength and lightweight properties?",
+  choices: [
+    "Fluted steel sheet",
+    "Corrugated metal sheet",
+    "Ribbed metal",
+    "Channel sheet"
+  ],
+  correct: "Corrugated metal sheet",
+  image: "figure17-A.png"
+},
+{
+  situation: "Situation 17 – Identification of Steel Materials",
+  question: "What is Figure E, a continuous roll of metal sheet that is wound into a coil, typically used for manufacturing, roofing, and processing into other shapes or products?",
+  choices: [
+    "Metal plate roll",
+    "Metal sheet coil",
+    "Rolled sheet",
+    "Steel belt"
+  ],
+  correct: "Metal sheet coil",
+  image: "figure17-A.png"
+},
+
+/* --- Steel Framing Parts (Figure 17-B) --- */
+
+{
+  situation: "Situation 17 – Steel Framing Parts",
+  question: "Which item is the steel rafter?",
+  choices: ["Figure A", "Figure B", "Figure D", "Figure E"],
+  correct: "Figure E",
+  image: "figure17-B.png"
+},
+{
+  situation: "Situation 17 – Steel Framing Parts",
+  question: "Which item is the eave purlin?",
+  choices: ["Figure A", "Figure C", "Figure E", "Figure D"],
+  correct: "Figure A",
+  image: "figure17-B.png"
+},
+{
+  situation: "Situation 17 – Steel Framing Parts",
+  question: "Which item is the anchor bolt?",
+  choices: ["Figure A", "Figure B", "Figure C", "Figure D"],
+  correct: "Figure D",
+  image: "figure17-B.png"
+},
+{
+  situation: "Situation 17 – Steel Framing Parts",
+  question: "Which item is the corner post?",
+  choices: ["Figure B", "Figure D", "Figure E", "Figure C"],
+  correct: "Figure D",
+  image: "figure17-B.png"
+},
+{
+  situation: "Situation 17 – Steel Framing Parts",
+  question: "Which item is the post-and-beam frame?",
+  choices: ["Figure A", "Figure B", "Figure C", "Figure E"],
+  correct: "Figure B",
+  image: "figure17-B.png"
+},
+
+/* --- Wire and Mesh Products (Figure 17-C) --- */
+
+{
+  situation: "Situation 17 – Wire and Mesh Products",
+  question: "What is Figure A, a type of wire used to securely bind reinforcement bars in concrete construction?",
+  choices: ["Binding wire", "Tie wire", "GI wire", "Galvanized wire"],
+  correct: "Tie wire",
+  image: "figure17-C.png"
+},
+{
+  situation: "Situation 17 – Wire and Mesh Products",
+  question: "What is Figure B, a type of wire used for security fencing, characterized by sharp edges or points along the wire?",
+  choices: ["Razor wire", "Barbed wire", "Concertina wire", "Security wire"],
+  correct: "Barbed wire",
+  image: "figure17-C.png"
+},
+{
+  situation: "Situation 17 – Wire and Mesh Products",
+  question: "What is Figure C, a type of wire mesh made by welding the intersection of horizontal and vertical wires?",
+  choices: [
+    "Expanded wire mesh",
+    "Welded wire",
+    "Reinforced mesh",
+    "Steel fabric"
+  ],
+  correct: "Welded wire",
+  image: "figure17-C.png"
+},
+{
+  situation: "Situation 17 – Wire and Mesh Products",
+  question: "What is Figure D, a mesh made from metal wires that are woven or welded together to form a grid structure?",
+  choices: [
+    "Woven mesh",
+    "Wire mesh",
+    "Galvanized steel mesh",
+    "Reinforced grid mesh"
+  ],
+  correct: "Wire mesh",
+  image: "figure17-C.png"
+},
+{
+  situation: "Situation 17 – Wire and Mesh Products",
+  question: "What is Figure E, a type of fencing material made from interwoven metal wire, commonly used for security and enclosure purposes?",
+  choices: [
+    "Expanded wire",
+    "Cyclone wire",
+    "Barbed wire",
+    "Concertina wire"
+  ],
+  correct: "Cyclone wire",
+  image: "figure17-C.png"
+},
+/* =========================
+   SITUATION 17 – STEEL CONSTRUCTION (CONTINUED)
+   ========================= */
+
+/* --- Steel Construction Concepts --- */
+
+{
+  situation: "Situation 17 – Steel Construction Concepts",
+  question: "Which type of building benefits the most from steel construction?",
+  choices: ["Beach facilities", "Sports facilities", "Office buildings", "Residential houses"],
+  correct: "Sports facilities"
+},
+{
+  situation: "Situation 17 – Steel Construction Concepts",
+  question: "What is the primary disadvantage of using steel as a building material?",
+  choices: [
+    "Cost fluctuation",
+    "Corrosion resistance",
+    "Earthquake performance",
+    "High ductility"
+  ],
+  correct: "Cost fluctuation"
+},
+{
+  situation: "Situation 17 – Steel Construction Concepts",
+  question: "When selecting prefabricated steel, which material is the most expensive?",
+  choices: ["Rolled concrete", "Structural steel", "Heavy timber", "Aluminum"],
+  correct: "Aluminum"
+},
+{
+  situation: "Situation 17 – Steel Construction Concepts",
+  question: "Which of the following is a major steel construction company in the Philippines?",
+  choices: [
+    "Metro Steel Corporation",
+    "Pilipinas Shell",
+    "Megawide Construction",
+    "Aboitiz Corporation"
+  ],
+  correct: "Metro Steel Corporation"
+},
+{
+  situation: "Situation 17 – Steel Construction Concepts",
+  question: "Who is mainly responsible for the structural design of steel components?",
+  choices: ["Architect", "General contractor", "Civil engineer", "Design architect"],
+  correct: "Civil engineer"
+},
+
+/* --- Wide-Flange Sections and Steel Members --- */
+
+{
+  situation: "Situation 17 – Wide-Flange Sections and Steel Members",
+  question: "What does W-14 represent in structural steel design?",
+  choices: [
+    "W-shape, 14 in height and 14 in width",
+    "W-shape, 14 in height and 13 in width",
+    "W-shape, 14 in height and 14 lb/ft",
+    "W-shape, 14 in height and 13 lb/ft"
+  ],
+  correct: "W-shape, 14 in height and 13 in width"
+},
+{
+  situation: "Situation 17 – Wide-Flange Sections and Steel Members",
+  question: "What do you call an I-shaped steel member specifically used as a steel column?",
+  choices: [
+    "Wide-flange column",
+    "Universal beam",
+    "H-section column",
+    "Flange column"
+  ],
+  correct: "Wide-flange column"
+},
+{
+  situation: "Situation 17 – Wide-Flange Sections and Steel Members",
+  question: "Which part of an I-beam section resists shear forces?",
+  choices: ["Flange", "Web", "Fillet", "Bearing plate"],
+  correct: "Web"
+},
+{
+  situation: "Situation 17 – Wide-Flange Sections and Steel Members",
+  question: "A steel member with equal or nearly equal width and depth is most suitable for use as a:",
+  choices: ["Beam", "Joist", "Column", "Girder"],
+  correct: "Column"
+},
+{
+  situation: "Situation 17 – Wide-Flange Sections and Steel Members",
+  question: "Which vertical central part of a wide-flange section connects the flanges?",
+  choices: ["Flange", "Web", "Rib", "Bearing"],
+  correct: "Web"
+},
+
+/* --- Steel Sections and Terminology --- */
+
+{
+  situation: "Situation 17 – Steel Sections and Terminology",
+  question: "An I-beam is also known as a:",
+  choices: ["H-section", "I-section", "W-section", "All of the above"],
+  correct: "All of the above"
+},
+{
+  situation: "Situation 17 – Steel Sections and Terminology",
+  question: "Which of the following is NOT a standard steel section?",
+  choices: ["Channel", "HSS", "RHS", "LMS"],
+  correct: "LMS"
+},
+{
+  situation: "Situation 17 – Steel Sections and Terminology",
+  question: "What is the primary web of an I-beam used for?",
+  choices: [
+    "To resist bending",
+    "To resist shear",
+    "To resist torsion",
+    "To resist compression only"
+  ],
+  correct: "To resist shear"
+},
+{
+  situation: "Situation 17 – Steel Sections and Terminology",
+  question: "What do you call the outer horizontal elements of a wide-flange section?",
+  choices: ["Web", "Rib", "Flange", "Plate"],
+  correct: "Flange"
+},
+{
+  situation: "Situation 17 – Steel Sections and Terminology",
+  question: "Which flange of a wide-flange beam resists most of the load in bending?",
+  choices: ["Bottom flange", "Top flange", "Web", "Both flanges"],
+  correct: "Both flanges"
+},
+/* =========================
+   SITUATION 17 – STEEL CONSTRUCTION (CONTINUED)
+   ========================= */
+
+/* --- Beams and Load Behavior --- */
+
+{
+  situation: "Situation 17 – Beams and Load Behavior",
+  question: "Which steel member refers to horizontal components?",
+  choices: ["Rafter", "Purlin", "Beam", "Column"],
+  correct: "Beam"
+},
+{
+  situation: "Situation 17 – Beams and Load Behavior",
+  question: "Which part of the beam carries most of the load in bending?",
+  choices: ["Web", "Top flange", "Bottom flange", "All of the above"],
+  correct: "All of the above"
+},
+{
+  situation: "Situation 17 – Beams and Load Behavior",
+  question: "Which of the following is a function of an I-beam?",
+  choices: [
+    "To resist bending",
+    "To resist shear forces",
+    "To transmit loads",
+    "All of the above"
+  ],
+  correct: "All of the above"
+},
+{
+  situation: "Situation 17 – Beams and Load Behavior",
+  question: "What is the function of the web in an I-beam?",
+  choices: [
+    "To resist bending",
+    "To resist shear",
+    "To connect beams",
+    "To anchor bolts"
+  ],
+  correct: "To resist shear"
+},
+{
+  situation: "Situation 17 – Beams and Load Behavior",
+  question: "Which steel section is best suited for long-span horizontal applications such as bridges?",
+  choices: ["Channel", "Angle", "Plate girder", "Tee section"],
+  correct: "Plate girder"
+},
+
+/* --- Steel Decking and Roofing --- */
+
+{
+  situation: "Situation 17 – Steel Decking and Roofing",
+  question: "What is the minimum gauge of steel decking used in construction?",
+  choices: ["20 gauge", "22 gauge", "24 gauge", "26 gauge"],
+  correct: "24 gauge"
+},
+{
+  situation: "Situation 17 – Steel Decking and Roofing",
+  question: "Which steel manufacturer is a major local supplier of long-span roofing and steel decking?",
+  choices: ["Pag-asa Steel", "DN Steel", "SteelAsia", "Nippon Steel"],
+  correct: "DN Steel"
+},
+{
+  situation: "Situation 17 – Steel Decking and Roofing",
+  question: "Which type of roofing material is commonly used in steel structures?",
+  choices: ["Concrete tile", "Clay tile", "GI sheet", "Asphalt shingle"],
+  correct: "GI sheet"
+},
+{
+  situation: "Situation 17 – Steel Decking and Roofing",
+  question: "Which steel product is typically used for skylight installations?",
+  choices: [
+    "Steel deck",
+    "Corrugated GI sheet",
+    "Polycarbonate sheet",
+    "Aluminum plate"
+  ],
+  correct: "Polycarbonate sheet"
+},
+{
+  situation: "Situation 17 – Steel Decking and Roofing",
+  question: "What type of steel tubular column filled with concrete is commonly used as a vertical support?",
+  choices: ["Pipe column", "Lally column", "HSS column", "Cast-in-place tube"],
+  correct: "Lally column"
+},
+
+/* --- Prestressing Concepts (Introduction) --- */
+
+{
+  situation: "Situation 17 – Prestressing Concepts",
+  question: "What method of prestressing involves tensioning the tendons BEFORE placing the concrete?",
+  choices: [
+    "Post-tensioning",
+    "Pre-tensioning",
+    "Re-tensioning",
+    "Pre-stressing"
+  ],
+  correct: "Pre-tensioning"
+},
+{
+  situation: "Situation 17 – Prestressing Concepts",
+  question: "What method of prestressing involves applying tension to the tendons AFTER the concrete has hardened?",
+  choices: [
+    "Pre-tensioning",
+    "Post-tensioning",
+    "Re-stressing",
+    "Anchor tensioning"
+  ],
+  correct: "Post-tensioning"
+},
+{
+  situation: "Situation 17 – Prestressing Concepts",
+  question: "What are the steel wires or strands used in prestressing called?",
+  choices: ["Tendons", "Cables", "Ropes", "Bars"],
+  correct: "Tendons"
+},
+{
+  situation: "Situation 17 – Prestressing Concepts",
+  question: "What do you call the anchorage device used in post-tensioned concrete?",
+  choices: ["Bearing plate", "Wedge", "Anchor head", "All of the above"],
+  correct: "All of the above"
+},
+{
+  situation: "Situation 17 – Prestressing Concepts",
+  question: "What is the main advantage of prestressed concrete compared to conventional reinforced concrete?",
+  choices: [
+    "Reduced weight",
+    "Greater load-carrying capacity and crack control",
+    "Faster construction",
+    "Lower material cost"
+  ],
+  correct: "Greater load-carrying capacity and crack control"
+},
+/* =========================
+   SITUATION 17 – STEEL CONSTRUCTION (CONTINUED)
+   ========================= */
+
+/* --- Prestressing Methods and Behavior --- */
+
+{
+  situation: "Situation 17 – Prestressing Methods and Behavior",
+  question: "What method of prestressing involves tensioning the tendons BEFORE placing the concrete?",
+  choices: ["Post-tensioning", "Pre-tensioning", "Re-stressing", "Anchor stressing"],
+  correct: "Pre-tensioning"
+},
+{
+  situation: "Situation 17 – Prestressing Methods and Behavior",
+  question: "What method of prestressing involves applying tension to the tendons AFTER the concrete has hardened?",
+  choices: ["Pre-tensioning", "Post-tensioning", "Re-tensioning", "Stress anchoring"],
+  correct: "Post-tensioning"
+},
+{
+  situation: "Situation 17 – Prestressing Methods and Behavior",
+  question: "What is another term used for post-tensioning?",
+  choices: ["Reverse stressing", "Tendon casting", "Anchoring", "Jacking"],
+  correct: "Jacking"
+},
+{
+  situation: "Situation 17 – Prestressing Methods and Behavior",
+  question: "What is the main advantage of prestressed concrete compared to conventional reinforced concrete?",
+  choices: [
+    "Better fire resistance",
+    "Reduced weight",
+    "Greater load-carrying capacity and crack control",
+    "Lower construction cost"
+  ],
+  correct: "Greater load-carrying capacity and crack control"
+},
+{
+  situation: "Situation 17 – Prestressing Methods and Behavior",
+  question: "What is commonly used to anchor the tendons in post-tensioned concrete?",
+  choices: ["Bolts", "Anchor heads and wedges", "Steel plates", "Bearing pads"],
+  correct: "Anchor heads and wedges"
+},
+
+/* --- Steel Properties and Performance --- */
+
+{
+  situation: "Situation 17 – Steel Properties and Performance",
+  question: "What typically happens to steel when subjected to excessive heat?",
+  choices: ["It hardens", "It becomes brittle", "It melts instantly", "It loses strength"],
+  correct: "It loses strength"
+},
+{
+  situation: "Situation 17 – Steel Properties and Performance",
+  question: "What property of steel allows it to undergo large deformations before failure?",
+  choices: ["Elasticity", "Brittleness", "Ductility", "Hardness"],
+  correct: "Ductility"
+},
+{
+  situation: "Situation 17 – Steel Properties and Performance",
+  question: "Which structural steel beam is best at resisting twisting or warping under torsional loading?",
+  choices: ["I-beam", "Channel", "Z-beam", "Box beam"],
+  correct: "Box beam"
+},
+{
+  situation: "Situation 17 – Steel Properties and Performance",
+  question: "What steel section is commonly used for skylight installations?",
+  choices: ["Steel deck", "Corrugated sheet", "Polycarbonate sheet", "Flat bar"],
+  correct: "Polycarbonate sheet"
+},
+{
+  situation: "Situation 17 – Steel Properties and Performance",
+  question: "What do you call a steel tubular column filled with concrete, commonly used as a vertical support?",
+  choices: ["Pipe column", "Lally column", "HSS column", "Cast-in-place column"],
+  correct: "Lally column"
+},
+
+/* --- Steel Reinforcement Bars --- */
+
+{
+  situation: "Situation 17 – Steel Reinforcement Bars",
+  question: "What is the weight of a 6-meter-long, 10 mm diameter deformed steel bar?",
+  choices: ["3.70 kg", "4.70 kg", "6.00 kg", "8.50 kg"],
+  correct: "4.70 kg"
+},
+{
+  situation: "Situation 17 – Steel Reinforcement Bars",
+  question: "What is the weight of a 6-meter-long, 12 mm diameter deformed steel bar?",
+  choices: ["6.00 kg", "7.40 kg", "8.50 kg", "9.70 kg"],
+  correct: "7.40 kg"
+},
+{
+  situation: "Situation 17 – Steel Reinforcement Bars",
+  question: "What is the weight of a 6-meter-long, 16 mm diameter deformed steel bar?",
+  choices: ["12.50 kg", "15.00 kg", "18.00 kg", "20.00 kg"],
+  correct: "18.00 kg"
+},
+{
+  situation: "Situation 17 – Steel Reinforcement Bars",
+  question: "What is the minimum yield strength of Grade 40 steel reinforcement?",
+  choices: ["40,000 psi", "50,000 psi", "60,000 psi", "70,000 psi"],
+  correct: "40,000 psi"
+},
+{
+  situation: "Situation 17 – Steel Reinforcement Bars",
+  question: "What is the minimum yield strength of Grade 60 reinforcing steel commonly used in construction?",
+  choices: ["40,000 psi", "50,000 psi", "60,000 psi", "75,000 psi"],
+  correct: "60,000 psi"
+},
+/* =========================
+   SITUATION 17 – REINFORCEMENT DETAILING
+   ========================= */
+
+/* --- Reinforcement Detailing Requirements --- */
+
+{
+  situation: "Situation 17 – Reinforcement Detailing Requirements",
+  question: "What is the minimum size of reinforcing bars used for footings?",
+  choices: ["10 mm", "12 mm", "16 mm", "20 mm"],
+  correct: "12 mm"
+},
+{
+  situation: "Situation 17 – Reinforcement Detailing Requirements",
+  question: "What is the minimum size of reinforcing bars used for slab-on-fill?",
+  choices: ["8 mm", "10 mm", "12 mm", "16 mm"],
+  correct: "8 mm"
+},
+{
+  situation: "Situation 17 – Reinforcement Detailing Requirements",
+  question: "A standard 90-degree bend shall have an extension at the end of the bar equal to ____ times the bar diameter.",
+  choices: ["6 db", "8 db", "10 db", "12 db"],
+  correct: "8 db"
+},
+{
+  situation: "Situation 17 – Reinforcement Detailing Requirements",
+  question: "The minimum clear spacing between parallel bars in a layer shall not be less than ____ times the bar diameter (db).",
+  choices: ["2 db", "3 db", "4 db", "5 db"],
+  correct: "2 db"
+},
+{
+  situation: "Situation 17 – Reinforcement Detailing Requirements",
+  question: "The standard hook extension for stirrups and ties shall be:",
+  choices: [
+    "90-degree bend plus 6 db extension",
+    "135-degree bend plus 6 db extension",
+    "90-degree bend plus 12 db extension",
+    "135-degree bend plus 12 db extension"
+  ],
+  correct: "135-degree bend plus 6 db extension"
+},
+
+/* --- Spacing and Concrete Cover --- */
+
+{
+  situation: "Situation 17 – Spacing and Concrete Cover",
+  question: "In spirally reinforced or tied compression members, the minimum clear spacing between bars shall be:",
+  choices: ["1.5 db", "2.0 db", "2.5 db", "3.0 db"],
+  correct: "2.0 db"
+},
+{
+  situation: "Situation 17 – Spacing and Concrete Cover",
+  question: "Bars larger than ____ mm shall not be bundled.",
+  choices: ["25 mm", "28 mm", "32 mm", "36 mm"],
+  correct: "32 mm"
+},
+{
+  situation: "Situation 17 – Spacing and Concrete Cover",
+  question: "A standard hook may consist of a 180-degree bend plus a 4 db extension at the free end of not less than ____ mm.",
+  choices: ["50 mm", "65 mm", "75 mm", "90 mm"],
+  correct: "65 mm"
+},
+{
+  situation: "Situation 17 – Spacing and Concrete Cover",
+  question: "Non-prestressed bars shall be confined by lateral ties with a minimum diameter of ____ mm for bars of at least ____ mm.",
+  choices: [
+    "8 mm for 10 mm bars",
+    "10 mm for 12 mm bars",
+    "12 mm for 16 mm bars",
+    "16 mm for 20 mm bars"
+  ],
+  correct: "10 mm for 12 mm bars"
+},
+{
+  situation: "Situation 17 – Spacing and Concrete Cover",
+  question: "What is the minimum concrete cover for reinforcement in footings when cast against soil?",
+  choices: ["40 mm", "50 mm", "75 mm", "100 mm"],
+  correct: "75 mm"
+},
+/* =========================
+   SITUATION 18 – CONCRETE CONSTRUCTION
+   ========================= */
+
+/* --- Materials, Curing, and Slab Requirements --- */
+
+{
+  situation: "Situation 18 – Materials, Curing, and Slab Requirements",
+  question: "During which period is curing most critical for improving the strength and durability of concrete?",
+  choices: ["First 3 days", "First one week", "First two weeks", "First month"],
+  correct: "First one week"
+},
+{
+  situation: "Situation 18 – Materials, Curing, and Slab Requirements",
+  question: "When constructing a slab-on-grade, what should be the depth of cut for a 4-inch-thick concrete slab?",
+  choices: ["1 inch", "2 inches", "3 inches", "4 inches"],
+  correct: "4 inches"
+},
+{
+  situation: "Situation 18 – Materials, Curing, and Slab Requirements",
+  question: "What mineral makes up approximately 60%–80% of a typical concrete mix to help reduce cost?",
+  choices: ["Cement", "Aggregate", "Sand", "Admixture"],
+  correct: "Aggregate"
+},
+{
+  situation: "Situation 18 – Materials, Curing, and Slab Requirements",
+  question: "What is a suitable alternative to steel rebar for large slab-on-grade areas when ready-mix concrete is used?",
+  choices: [
+    "Welded wire mesh",
+    "Fiberglass mesh",
+    "Polypropylene fiber",
+    "Steel plates"
+  ],
+  correct: "Welded wire mesh"
+},
+{
+  situation: "Situation 18 – Materials, Curing, and Slab Requirements",
+  question: "Concrete admixtures improve when the water-to-cement ratio is:",
+  choices: ["Increased", "Decreased", "Doubled", "Ignored"],
+  correct: "Decreased"
+},
+
+/* --- Cement Types and Properties --- */
+
+{
+  situation: "Situation 18 – Cement Types and Properties",
+  question: "What is the most common type of cement used in general construction?",
+  choices: [
+    "Pozzolan",
+    "High alumina",
+    "Portland cement",
+    "Sulfate-resisting"
+  ],
+  correct: "Portland cement"
+},
+{
+  situation: "Situation 18 – Cement Types and Properties",
+  question: "Which type of cement develops strength at a much faster rate than others?",
+  choices: ["High alumina", "Blast furnace", "Portland", "Pozzolan"],
+  correct: "High alumina"
+},
+{
+  situation: "Situation 18 – Cement Types and Properties",
+  question: "Which cement achieves the highest strength after a longer curing period compared to other types?",
+  choices: ["Ordinary", "Portland", "High alumina", "Pozzolan"],
+  correct: "Pozzolan"
+},
+{
+  situation: "Situation 18 – Cement Types and Properties",
+  question: "Which type of cement hardens the slowest?",
+  choices: [
+    "Portland",
+    "Masonry cement",
+    "High early strength cement",
+    "Pozzolan"
+  ],
+  correct: "Pozzolan"
+},
+{
+  situation: "Situation 18 – Cement Types and Properties",
+  question: "Which admixture accelerates the early strength development of concrete?",
+  choices: ["Retarder", "Accelerator", "Air-entrainer", "Plasticizer"],
+  correct: "Accelerator"
+},
+
+/* --- Aggregates and Mix Proportions --- */
+
+{
+  situation: "Situation 18 – Aggregates and Mix Proportions",
+  question: "Any various hard, inert mineral materials such as sand and gravel added to cement paste to produce concrete or mortar are called:",
+  choices: ["Mortar", "Aggregate", "Admixture", "Binder"],
+  correct: "Aggregate"
+},
+{
+  situation: "Situation 18 – Aggregates and Mix Proportions",
+  question: "Aggregate with particles retained on a 5 mm sieve is classified as ____ aggregate.",
+  choices: ["Fine", "Coarse", "Crushed", "Gravel"],
+  correct: "Coarse"
+},
+{
+  situation: "Situation 18 – Aggregates and Mix Proportions",
+  question: "What aggregate size is most suitable for a ground floor slab?",
+  choices: ["½ inch", "¾ inch", "1 inch", "1½ inches"],
+  correct: "¾ inch"
+},
+{
+  situation: "Situation 18 – Aggregates and Mix Proportions",
+  question: "Which of these is NOT a basic requirement of a concrete mix?",
+  choices: ["Strength", "Economy", "Density", "Durability"],
+  correct: "Density"
+},
+{
+  situation: "Situation 18 – Aggregates and Mix Proportions",
+  question: "Any material other than cement, water, or aggregate that is added to concrete to modify its properties is called an:",
+  choices: ["Filler", "Accelerator", "Admixture", "Binder"],
+  correct: "Admixture"
+},
+
+/* --- Concrete Classes and Strengths --- */
+
+{
+  situation: "Situation 18 – Concrete Classes and Strengths",
+  question: "What is the minimum compressive strength of a Class A concrete mixture?",
+  choices: ["2,000 psi", "2,500 psi", "3,000 psi", "3,500 psi"],
+  correct: "3,000 psi"
+},
+{
+  situation: "Situation 18 – Concrete Classes and Strengths",
+  question: "A concrete mixture with a proportion of 1:2.5:5 is classified as:",
+  choices: ["Class A", "Class B", "Class C", "Class D"],
+  correct: "Class B"
+},
+{
+  situation: "Situation 18 – Concrete Classes and Strengths",
+  question: "What is the compressive strength of a 1:2:4 concrete mixture?",
+  choices: ["2,000 psi", "2,500 psi", "3,000 psi", "3,500 psi"],
+  correct: "3,000 psi"
+},
+{
+  situation: "Situation 18 – Concrete Classes and Strengths",
+  question: "A concrete mix of 1:2:4 has a compressive strength of:",
+  choices: ["2,000 psi", "2,500 psi", "3,000 psi", "3,500 psi"],
+  correct: "3,000 psi"
+},
+{
+  situation: "Situation 18 – Concrete Classes and Strengths",
+  question: "What is the water-cement ratio for Class AA concrete?",
+  choices: ["1:1.5", "1:2", "1:2.5", "1:3"],
+  correct: "1:2"
+},
+
+/* --- Testing and Quality Control --- */
+
+{
+  situation: "Situation 18 – Testing and Quality Control",
+  question: "When should ready-mix concrete be tested?",
+  choices: ["At the site", "At the plant", "At the office", "At the warehouse"],
+  correct: "At the site"
+},
+{
+  situation: "Situation 18 – Testing and Quality Control",
+  question: "What is added to a concrete mix to reduce water usage?",
+  choices: [
+    "Air-entrainer",
+    "Retarder",
+    "Water-reducing admixture",
+    "Cement"
+  ],
+  correct: "Water-reducing admixture"
+},
+{
+  situation: "Situation 18 – Testing and Quality Control",
+  question: "What is the most important factor affecting the strength of concrete?",
+  choices: ["Sand", "Water", "Cement", "Aggregate"],
+  correct: "Water"
+},
+{
+  situation: "Situation 18 – Testing and Quality Control",
+  question: "What test determines the consistency of concrete?",
+  choices: [
+    "Compression test",
+    "Slump test",
+    "Schmidt hammer test",
+    "Tensile test"
+  ],
+  correct: "Slump test"
+},
+{
+  situation: "Situation 18 – Testing and Quality Control",
+  question: "Which test measures the strength of a material?",
+  choices: [
+    "Compression test",
+    "Slump test",
+    "Hammer test",
+    "Density test"
+  ],
+  correct: "Compression test"
+},
+
+/* --- Concrete Use, Curing, and Admixtures --- */
+
+{
+  situation: "Situation 18 – Concrete Use, Curing, and Admixtures",
+  question: "Which class of concrete is NOT recommended for use in:",
+  choices: [
+    "Beams and girders",
+    "Sidewalks",
+    "Pavements",
+    "Slabs on fill"
+  ],
+  correct: "Sidewalks"
+},
+{
+  situation: "Situation 18 – Concrete Use, Curing, and Admixtures",
+  question: "What is the compressive strength of Class B concrete?",
+  choices: ["3,000 psi", "2,500 psi", "2,000 psi", "1,500 psi"],
+  correct: "2,500 psi"
+},
+{
+  situation: "Situation 18 – Concrete Use, Curing, and Admixtures",
+  question: "A concrete mix with a proportion of 1:3:6 is classified as:",
+  choices: ["Class A", "Class B", "Class C", "Class D"],
+  correct: "Class D"
+},
+{
+  situation: "Situation 18 – Concrete Use, Curing, and Admixtures",
+  question: "What is the compressive strength of a slab-on-grade?",
+  choices: ["3,000 psi", "2,500 psi", "2,000 psi", "1,500 psi"],
+  correct: "2,000 psi"
+},
+{
+  situation: "Situation 18 – Concrete Use, Curing, and Admixtures",
+  question: "What is the compressive strength of a structural concrete member?",
+  choices: ["3,000 psi", "2,500 psi", "2,000 psi", "1,500 psi"],
+  correct: "3,000 psi"
+},
+/* =========================
+   SITUATION 18 – CONCRETE CONSTRUCTION (CONTINUED)
+   ========================= */
+
+/* --- Temporary Structures and Workability --- */
+
+{
+  situation: "Situation 18 – Temporary Structures and Workability",
+  question: "What is a temporary structure required to support newly placed concrete, including the forms and necessary supports?",
+  choices: ["Formwork", "Falsework", "Scaffold", "Bracing"],
+  correct: "Falsework"
+},
+{
+  situation: "Situation 18 – Temporary Structures and Workability",
+  question: "What property of fresh concrete is indicated by the amount of internal work required to fully compact it without segregation?",
+  choices: ["Density", "Workability", "Strength", "Consistency"],
+  correct: "Workability"
+},
+{
+  situation: "Situation 18 – Temporary Structures and Workability",
+  question: "What are air bubbles purposely introduced into the cement paste called?",
+  choices: ["Honeycomb", "Entrained air", "Trapped air", "Voids"],
+  correct: "Entrained air"
+},
+{
+  situation: "Situation 18 – Temporary Structures and Workability",
+  question: "What type of concrete has a very low water-cement ratio and is typically used for blinding or base layers?",
+  choices: ["Lean concrete", "Structural concrete", "Lightweight concrete", "Air-entrained concrete"],
+  correct: "Lean concrete"
+},
+{
+  situation: "Situation 18 – Temporary Structures and Workability",
+  question: "What material acts as the binder in concrete?",
+  choices: ["Sand", "Aggregate", "Cement", "Water"],
+  correct: "Cement"
+},
+
+/* --- Testing, Strength, and Curing --- */
+
+{
+  situation: "Situation 18 – Testing, Strength, and Curing",
+  question: "What is the standard test to measure the strength of concrete?",
+  choices: ["Slump test", "Core test", "Compression test", "Tensile test"],
+  correct: "Compression test"
+},
+{
+  situation: "Situation 18 – Testing, Strength, and Curing",
+  question: "Which concrete type is commonly used under reinforced concrete?",
+  choices: ["Lean concrete", "Structural concrete", "Lightweight concrete", "Air-entrained concrete"],
+  correct: "Lean concrete"
+},
+{
+  situation: "Situation 18 – Testing, Strength, and Curing",
+  question: "When concrete is over-reinforced, what happens upon failure?",
+  choices: ["Steel yields first", "Concrete crushes suddenly", "Cracks form gradually", "None of the above"],
+  correct: "Concrete crushes suddenly"
+},
+{
+  situation: "Situation 18 – Testing, Strength, and Curing",
+  question: "When should concrete be tested for strength?",
+  choices: ["Before curing", "After 3 days", "After 7 days", "After 28 days"],
+  correct: "After 28 days"
+},
+{
+  situation: "Situation 18 – Testing, Strength, and Curing",
+  question: "Which curing method ensures concrete remains continuously moist?",
+  choices: ["Sprinkling water", "Ponding", "Curing compound", "Steam curing"],
+  correct: "Ponding"
+},
+
+/* --- Slump, Drying, and Dimensions --- */
+
+{
+  situation: "Situation 18 – Slump, Drying, and Dimensions",
+  question: "What is the purpose of the slump test?",
+  choices: ["To determine the strength of concrete", "To measure cement content", "To measure workability", "To determine aggregate size"],
+  correct: "To measure workability"
+},
+{
+  situation: "Situation 18 – Slump, Drying, and Dimensions",
+  question: "What is the most important factor affecting the strength of concrete?",
+  choices: ["Water-cement ratio", "Type of cement", "Aggregate size", "Curing method"],
+  correct: "Water-cement ratio"
+},
+{
+  situation: "Situation 18 – Slump, Drying, and Dimensions",
+  question: "Concrete must be cured for how many days before testing?",
+  choices: ["3 days", "7 days", "14 days", "28 days"],
+  correct: "28 days"
+},
+{
+  situation: "Situation 18 – Slump, Drying, and Dimensions",
+  question: "Which is the standard slump cone dimension (top, bottom, height)?",
+  choices: [
+    "200 mm, 100 mm, 300 mm",
+    "100 mm, 200 mm, 300 mm",
+    "150 mm, 300 mm, 450 mm",
+    "300 mm, 200 mm, 100 mm"
+  ],
+  correct: "100 mm, 200 mm, 300 mm"
+},
+{
+  situation: "Situation 18 – Slump, Drying, and Dimensions",
+  question: "What is the maximum allowable slump for vertical concrete members such as columns and walls?",
+  choices: ["25 mm", "50 mm", "75 mm", "100 mm"],
+  correct: "100 mm"
+},
+
+/* --- Reinforcement, Covers, and Formworks --- */
+
+{
+  situation: "Situation 18 – Reinforcement, Covers, and Formworks",
+  question: "Which is NOT included in the computation of reinforced concrete load?",
+  choices: ["Floor finish", "Slab", "Beam", "Column"],
+  correct: "Column"
+},
+{
+  situation: "Situation 18 – Reinforcement, Covers, and Formworks",
+  question: "Why is concrete cover provided for reinforcing bars (rebars)?",
+  choices: ["For aesthetics", "To protect steel from corrosion and fire", "To increase concrete weight", "To reduce cost"],
+  correct: "To protect steel from corrosion and fire"
+},
+{
+  situation: "Situation 18 – Reinforcement, Covers, and Formworks",
+  question: "What type of admixture delays the onset of hardening and generally reduces the rate of cement hydration?",
+  choices: ["Accelerator", "Plasticizer", "Retarder", "Air-entrainer"],
+  correct: "Retarder"
+},
+{
+  situation: "Situation 18 – Reinforcement, Covers, and Formworks",
+  question: "What is the standard value for the modulus of elasticity of concrete in MPa?",
+  choices: ["10,000 MPa", "15,000 MPa", "20,000 MPa", "25,000 MPa"],
+  correct: "20,000 MPa"
+},
+{
+  situation: "Situation 18 – Reinforcement, Covers, and Formworks",
+  question: "What admixture is used to reduce the water content in a concrete mixture?",
+  choices: ["Accelerator", "Plasticizer", "Retarder", "Air-entrainer"],
+  correct: "Plasticizer"
+},
+
+/* --- Concrete Cover Requirements --- */
+
+{
+  situation: "Situation 18 – Concrete Cover Requirements",
+  question: "What is the minimum concrete cover for a column footing?",
+  choices: ["20 mm", "30 mm", "50 mm", "75 mm"],
+  correct: "50 mm"
+},
+{
+  situation: "Situation 18 – Concrete Cover Requirements",
+  question: "What is the minimum concrete cover from the bottom of reinforcement bars to the bottom of a beam exposed to the weather?",
+  choices: ["25 mm", "40 mm", "50 mm", "75 mm"],
+  correct: "50 mm"
+},
+{
+  situation: "Situation 18 – Concrete Cover Requirements",
+  question: "What is the minimum concrete cover for pipes or conduits exposed to earth or weather?",
+  choices: ["20 mm", "25 mm", "40 mm", "50 mm"],
+  correct: "40 mm"
+},
+{
+  situation: "Situation 18 – Concrete Cover Requirements",
+  question: "What is the required concrete cover for a suspended slab?",
+  choices: ["20 mm", "25 mm", "30 mm", "40 mm"],
+  correct: "30 mm"
+},
+{
+  situation: "Situation 18 – Concrete Cover Requirements",
+  question: "What is the required concrete cover for a slab on grade?",
+  choices: ["20 mm", "30 mm", "40 mm", "50 mm"],
+  correct: "50 mm"
+},
+
+/* --- Weather Exposure and Curing Duration --- */
+
+{
+  situation: "Situation 18 – Weather Exposure and Curing Duration",
+  question: "What is the required concrete cover for slabs exposed to weather?",
+  choices: ["15 mm", "20 mm", "25 mm", "30 mm"],
+  correct: "30 mm"
+},
+{
+  situation: "Situation 18 – Weather Exposure and Curing Duration",
+  question: "What is the required concrete cover for slabs not exposed to weather?",
+  choices: ["15 mm", "20 mm", "25 mm", "30 mm"],
+  correct: "20 mm"
+},
+{
+  situation: "Situation 18 – Weather Exposure and Curing Duration",
+  question: "What is the required concrete cover for walls?",
+  choices: ["20 mm", "25 mm", "30 mm", "40 mm"],
+  correct: "30 mm"
+},
+{
+  situation: "Situation 18 – Weather Exposure and Curing Duration",
+  question: "What is the required concrete cover for beams?",
+  choices: ["20 mm", "25 mm", "30 mm", "40 mm"],
+  correct: "30 mm"
+},
+{
+  situation: "Situation 18 – Weather Exposure and Curing Duration",
+  question: "Why is concrete cover increased depending on the location or exposure condition?",
+  choices: [
+    "To improve aesthetics",
+    "To reduce reinforcement cost",
+    "To reduce reinforcement corrosion and concrete damage",
+    "To speed up construction"
+  ],
+  correct: "To reduce reinforcement corrosion and concrete damage"
+},
+
+/* --- Curing Time and Strength Gain --- */
+
+{
+  situation: "Situation 18 – Curing Time and Strength Gain",
+  question: "Which is the best expression of concrete in terms of curing time?",
+  choices: ["1 day", "3 days", "7 days", "28 days"],
+  correct: "28 days"
+},
+{
+  situation: "Situation 18 – Curing Time and Strength Gain",
+  question: "How many days before you can walk on a freshly poured concrete slab?",
+  choices: ["1 day", "2 days", "3 days", "7 days"],
+  correct: "3 days"
+},
+{
+  situation: "Situation 18 – Curing Time and Strength Gain",
+  question: "What is the most common method of curing concrete in the Philippines?",
+  choices: ["Steam curing", "Covering with plastic", "Ponding", "Sprinkling of water"],
+  correct: "Sprinkling of water"
+},
+{
+  situation: "Situation 18 – Curing Time and Strength Gain",
+  question: "After how many days of curing does concrete typically reach its maximum strength?",
+  choices: ["14 days", "21 days", "28 days", "35 days"],
+  correct: "28 days"
+},
+{
+  situation: "Situation 18 – Curing Time and Strength Gain",
+  question: "What is the typical curing time for concrete to gain sufficient early strength?",
+  choices: ["1 day", "3 days", "7 days", "14 days"],
+  correct: "7 days"
+},
+
+/* --- Mortar, Defects, and Cement Quantities --- */
+
+{
+  situation: "Situation 18 – Mortar, Defects, and Cement Quantities",
+  question: "What is a paste made of cement, sand, and water applied between bricks, blocks, or stones?",
+  choices: ["Concrete", "Plaster", "Mortar", "Grout"],
+  correct: "Mortar"
+},
+{
+  situation: "Situation 18 – Mortar, Defects, and Cement Quantities",
+  question: "What is the water-cement ratio for plastering?",
+  choices: ["1:3", "1:4", "1:2", "1:6"],
+  correct: "1:4"
+},
+{
+  situation: "Situation 18 – Mortar, Defects, and Cement Quantities",
+  question: "What is the maximum mix ratio for mortar?",
+  choices: ["1:2", "1:3", "1:4", "1:5"],
+  correct: "1:4"
+},
+{
+  situation: "Situation 18 – Mortar, Defects, and Cement Quantities",
+  question: "What happens to newly placed concrete in beams, slabs, or columns if it is not properly vibrated?",
+  choices: [
+    "It cracks immediately",
+    "It undergoes honeycombing",
+    "It hardens faster",
+    "It becomes stronger"
+  ],
+  correct: "It undergoes honeycombing"
+},
+{
+  situation: "Situation 18 – Mortar, Defects, and Cement Quantities",
+  question: "For a 10-cubic-meter slab using Class A mix, how many bags of cement are required?",
+  choices: ["80 bags", "90 bags", "100 bags", "120 bags"],
+  correct: "120 bags"
+},
+
+/* --- Cement Types and Brands --- */
+
+{
+  situation: "Situation 18 – Cement Types and Brands",
+  question: "What type of cement is used for general purposes?",
+  choices: ["Type IV", "Type I", "Sulfate-resisting", "White cement"],
+  correct: "Type I"
+},
+{
+  situation: "Situation 18 – Cement Types and Brands",
+  question: "Which of the following is a Portland cement supplier?",
+  choices: ["Cemex", "Tiguil", "Republic", "SteelAsia"],
+  correct: "Cemex"
+},
+{
+  situation: "Situation 18 – Cement Types and Brands",
+  question: "Which of the following is a local brand of Portland cement?",
+  choices: ["Republic", "Holcim", "Rizal", "All of the above"],
+  correct: "All of the above"
+},
+{
+  situation: "Situation 18 – Cement Types and Brands",
+  question: "Which of the following is NOT a cement brand?",
+  choices: ["Republic", "Rizal", "Holcim", "Bopillo"],
+  correct: "Bopillo"
+},
+
+/* --- Loads and Formworks --- */
+
+{
+  situation: "Situation 18 – Loads and Formworks",
+  question: "Stripping of forms and shores for foundations should be done after how many hours?",
+  choices: ["12", "18", "24", "36"],
+  correct: "24"
+},
+{
+  situation: "Situation 18 – Loads and Formworks",
+  question: "What is the design live load at the ground floor in kg/m²?",
+  choices: ["150", "180", "200", "250"],
+  correct: "200"
+},
+{
+  situation: "Situation 18 – Loads and Formworks",
+  question: "What is the design live load at the second floor in kg/m²?",
+  choices: ["150", "180", "200", "250"],
+  correct: "180"
+},
+{
+  situation: "Situation 18 – Loads and Formworks",
+  question: "What is the minimum wind load in kg/m² for vertical roof projections?",
+  choices: ["80", "100", "120", "150"],
+  correct: "100"
+},
+{
+  situation: "Situation 18 – Loads and Formworks",
+  question: "What is the curing time for a concrete cylinder before performing a compressive strength test?",
+  choices: ["7 days", "14 days", "21 days", "28 days"],
+  correct: "28 days"
+},
+
+/* --- Concrete Behavior and Defects --- */
+
+{
+  situation: "Situation 18 – Concrete Behavior and Defects",
+  question: "Concrete typically reaches its full compressive strength in how many days?",
+  choices: ["7", "14", "21", "28"],
+  correct: "28"
+},
+{
+  situation: "Situation 18 – Concrete Behavior and Defects",
+  question: "What is the main reason why concrete cracks?",
+  choices: [
+    "Insufficient cement",
+    "Steel rebars are too small",
+    "Poor workmanship during pouring",
+    "Excessive water in the mix"
+  ],
+  correct: "Excessive water in the mix"
+},
+{
+  situation: "Situation 18 – Concrete Behavior and Defects",
+  question: "What is the best measure for preventing concrete cracking?",
+  choices: [
+    "Proper curing and joint placement",
+    "Increasing cement content",
+    "Adding more water",
+    "Reducing aggregate size"
+  ],
+  correct: "Proper curing and joint placement"
+},
+{
+  situation: "Situation 18 – Concrete Behavior and Defects",
+  question: "What happens to concrete if water is added during curing?",
+  choices: ["Strength increases", "Strength decreases", "No effect", "Color changes"],
+  correct: "Strength decreases"
+},
+{
+  situation: "Situation 18 – Concrete Behavior and Defects",
+  question: "What is the most widely used material in large quantities to lower the cost of a concrete mix?",
+  choices: ["Cement", "Aggregate", "Sand", "Water"],
+  correct: "Aggregate"
+}
+
+];
+
+/* ========= BUILD SITUATION STATE ========= */
+const situations = {};
+questions.forEach(q => {
+  if (!situations[q.situation]) {
+    situations[q.situation] = {
+      questions: [],
+      index: 0,
+      score: 0,
+      completed: false
+    };
+  }
+  situations[q.situation].questions.push(q);
+});
+
+let currentSituation = null;
+
+/* ========= START ========= */
+function startQuiz() {
+  document.getElementById("start").style.display = "none";
+  showSituationMenu();
+}
+
+/* ========= SITUATION MENU ========= */
+function showSituationMenu() {
+  document.getElementById("quiz").style.display = "none";
+  document.getElementById("situationMenu").style.display = "block";
+
+  const list = document.getElementById("situationList");
+  list.innerHTML = "";
+
+  Object.keys(situations).forEach(key => {
+    const s = situations[key];
+    let status = s.completed ? "Completed" :
+                 s.index > 0 ? "In Progress" : "Not Started";
+
+    const btn = document.createElement("button");
+    btn.innerText = `${key} — ${status} (${s.score}/${s.questions.length})`;
+    btn.onclick = () => {
+      currentSituation = key;
+      startSituation();
+    };
+    list.appendChild(btn);
+  });
+}
+
+function showFinalSummary() {
+  document.getElementById("quiz").style.display = "none";
+  document.getElementById("situationMenu").style.display = "none";
+  document.getElementById("summary").style.display = "block";
+
+  const list = document.getElementById("summaryList");
+  list.innerHTML = "";
+
+  let totalScore = 0;
+  let totalQuestions = 0;
+
+  Object.keys(situations).forEach(key => {
+    const s = situations[key];
+
+    const row = document.createElement("p");
+
+    if (s.index === 0 && s.score === 0) {
+      row.innerText = `${key}: Skipped`;
+    } else {
+      row.innerText = `${key}: ${s.score} / ${s.questions.length}`;
+      totalScore += s.score;
+      totalQuestions += s.questions.length;
+    }
+
+    list.appendChild(row);
+  });
+
+  document.getElementById("totalScore").innerText =
+    `TOTAL SCORE: ${totalScore} / ${totalQuestions}`;
+}
+
+
+/* ========= START / RESUME SITUATION ========= */
+function startSituation() {
+  document.getElementById("situationMenu").style.display = "none";
+  document.getElementById("quiz").style.display = "block";
+  loadQuestion();
+}
+
+/* ========= LOAD QUESTION ========= */
+function loadQuestion() {
+  const s = situations[currentSituation];
+  const q = s.questions[s.index];
+
+  document.getElementById("situation").innerText = q.situation;
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("progress").innerText =
+    `Question ${s.index + 1} of ${s.questions.length} | Score: ${s.score}`;
+
+  const img = document.getElementById("figure");
+  if (q.image) {
+    img.src = q.image;
+    img.style.display = "block";
+  } else {
+    img.style.display = "none";
+  }
+
+  const container = document.getElementById("choices");
+  container.innerHTML = "";
+
+  [...q.choices]
+    .sort(() => Math.random() - 0.5)
+    .forEach(choice => {
+      const btn = document.createElement("button");
+      btn.innerText = choice;
+      btn.onclick = () => checkAnswer(btn, choice);
+      container.appendChild(btn);
+    });
+
+  document.getElementById("nextBtn").style.display = "none";
+}
+
+/* ========= CHECK ANSWER ========= */
+function checkAnswer(btn, choice) {
+  const s = situations[currentSituation];
+  const q = s.questions[s.index];
+
+  document.querySelectorAll("#choices button")
+    .forEach(b => b.disabled = true);
+
+  if (choice === q.correct) {
+    btn.classList.add("correct");
+    s.score++;
+  } else {
+    btn.classList.add("wrong");
+    document.querySelectorAll("#choices button").forEach(b => {
+      if (b.innerText === q.correct)
+        b.classList.add("correct");
+    });
+  }
+
+  document.getElementById("nextBtn").style.display = "block";
+}
+
+/* ========= NEXT QUESTION ========= */
+function nextQuestion() {
+  const s = situations[currentSituation];
+  s.index++;
+
+  if (s.index < s.questions.length) {
+    loadQuestion();
+  } else {
+    s.completed = true;
+    showSituationMenu(); // ← always return to menu
+  }
+}
+</script>
+
+</body>
+</html>
