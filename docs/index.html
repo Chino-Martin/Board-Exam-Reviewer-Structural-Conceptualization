@@ -3178,7 +3178,7 @@ const questions = [
 }
 
 ];
-
+const TOTAL_QUESTIONS = questions.length;
 /* ========= BUILD SITUATION STATE ========= */
 const situations = {};
 questions.forEach(q => {
@@ -3347,10 +3347,25 @@ function checkAnswer(btn, choice) {
   document.getElementById("nextBtn").style.display = "block";
 }
 
+function saveProgress() {
+  let answered = 0;
+
+  Object.values(situations).forEach(s => {
+    answered += s.index;
+  });
+
+  const percent = Math.floor((answered / TOTAL_QUESTIONS) * 100);
+
+  localStorage.setItem("progress-struct", percent);
+}
+
+  
 /* ========= NEXT QUESTION ========= */
 function nextQuestion() {
   const s = situations[currentSituation];
   s.index++;
+
+  saveProgress(); // ✅ ADD THIS LINE
 
   if (s.index < s.questions.length) {
     loadQuestion();
@@ -3359,7 +3374,9 @@ function nextQuestion() {
     showSituationComplete();
   }
 }
+
 </script>
 
 </body>
 </html>
+
